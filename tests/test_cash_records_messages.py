@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from env import *
 exec(open(HERE/'helpers_b.py').read().split("async def login")[0])
-=======
-import sys; sys.path.insert(0,"/tmp/claude-0/work")
-exec(open('t6b.py').read().split("async def login")[0])
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 async def main():
     reset_db()
     sh("truncate cash_days, cash_entries, activity_log; delete from storage.objects; update admin_settings set pin_hash=extensions.crypt('Bacha2026!', extensions.gen_salt('bf')), pin_changed=true; delete from store_settings where key='store_mode'",role=None)

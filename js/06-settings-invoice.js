@@ -48,17 +48,10 @@ function applyAppConfig() {
   set('cfg-max-boxes', appConfig.maxBoxes); set('cfg-max-drinks', appConfig.maxDrinks);
   set('cfg-daily-drinks', appConfig.dailyDrinks); set('cfg-low-stock', appConfig.lowStock); set('cfg-ig', appConfig.igHandle);
   set('cfg-delivery-area', appConfig.deliveryArea || ''); set('cfg-free-min', appConfig.freeDeliveryMin || 0); renderDeliveryRules();
-<<<<<<< HEAD
   const ig = document.getElementById('ig-float'), dock = document.getElementById('ig-dock');
   const handle = String(appConfig.igHandle || '').trim().replace(/\/+$/, '').split('/').pop().replace(/^@/, '');
   if (ig) {
     if (dock) dock.classList.toggle('hidden', !handle);
-=======
-  const ig = document.getElementById('ig-float');
-  const handle = String(appConfig.igHandle || '').trim().replace(/\/+$/, '').split('/').pop().replace(/^@/, '');
-  if (ig) {
-    ig.classList.toggle('hidden', !handle);
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
     if (handle) ig.href = `https://ig.me/m/${encodeURIComponent(handle)}`;
   }
   renderSingleMenu(); renderAdmin();
@@ -166,7 +159,6 @@ function showInvoiceObj(o) {
 
 // ---- CSV export ----
 
-<<<<<<< HEAD
 
 /* Instagram button: a small tab sits on the left edge of the screen so it never covers content. Tap it to slide the message button out; tap again, tap elsewhere or press Esc to tuck it away. */
 function setIgDock(collapsed) {
@@ -184,5 +176,3 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { const d = document.getElementById('ig-dock'); if (d && !d.classList.contains('is-collapsed')) { setIgDock(true); document.getElementById('ig-toggle').focus(); } } });
   const l = document.getElementById('ig-float'); if (l) l.addEventListener('click', () => setTimeout(() => setIgDock(true), 50));
 });
-=======
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5

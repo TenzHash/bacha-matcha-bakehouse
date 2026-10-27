@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from env import *
 exec(open(HERE/'helpers_a.py').read().split("async def main")[0])
-=======
-import sys; sys.path.insert(0,"/tmp/claude-0/work")
-exec(open('t5b.py').read().split("async def main")[0])
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 async def login(pg):
     await pg.evaluate("(()=>{toggleAdminLoginModal(true);return 1})()")
     await pg.fill('#admin-password-input','Bacha2026!'); await pg.evaluate("(()=>{handleAdminLogin();return 1})()"); await pg.wait_for_timeout(1800)

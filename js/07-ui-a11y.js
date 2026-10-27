@@ -45,11 +45,7 @@ async function copyOrderId() {
 }
 function trackJustPlaced() { toggleOrderSuccess(false); toggleTrackModal(true); }
 
-<<<<<<< HEAD
 let ordersFilter = 'all', ordersSearch = '', ordersLimit = 20, activeAdminTab = 'today';
-=======
-let ordersFilter = 'all', ordersSearch = '', ordersLimit = 20, activeAdminTab = 'inventory';
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 function setOrdersFilter(f) { ordersFilter = f; ordersLimit = 20; renderAdmin(); }
 function setOrdersSearch(v) { ordersSearch = String(v || '').trim().toLowerCase(); ordersLimit = 20; renderAdmin(); }
 function showMoreOrders() { ordersLimit += 20; renderAdmin(); }
@@ -90,11 +86,7 @@ function updateMobileBar() {
 function mobileBarAction() {
   const a = document.getElementById('mbar-btn').dataset.act;
   if (a === 'add') addCustomBoxToCart();
-<<<<<<< HEAD
   else if (a === 'scroll') goShopPage('box');
-=======
-  else if (a === 'scroll') document.getElementById('box-builder-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   else toggleCartDrawer(true);
 }
 
@@ -112,30 +104,8 @@ function updatePosBar() {
 }
 function posBarAction() { document.getElementById('pos-ticket-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-<<<<<<< HEAD
 function jumpTo(which) { if (typeof goShopPage === 'function') goShopPage(which === 'box' ? 'box' : 'singles'); }
 function updateSectionNav() { const nav = document.getElementById('section-nav'); if (nav) nav.classList.add('hidden'); } // replaced by the page steps
-=======
-function jumpTo(which) {
-  document.getElementById(which === 'box' ? 'box-mode-wrap' : 'single-menu-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-function updateSectionNav() {
-  const nav = document.getElementById('section-nav');
-  if (!nav) return;
-  const storeVisible = !document.getElementById('store-view').classList.contains('hidden');
-  const show = storeVisible && displayMode === 'both';
-  nav.classList.toggle('hidden', !show);
-  if (!show) return;
-  const s = document.getElementById('single-menu-section');
-  const inSingles = s && s.getBoundingClientRect().top < window.innerHeight * 0.5;
-  const base = 'flex-1 sm:flex-none px-4 py-2 rounded-full font-cute font-bold text-[13px] sm:text-sm border transition ';
-  const act = 'bg-bacha-matcha text-white border-bacha-matcha', idle = 'bg-white text-bacha-text border-bacha-gingham hover:bg-bacha-pinkLight';
-  document.getElementById('secnav-box').className = base + (inSingles ? idle : act);
-  document.getElementById('secnav-box').setAttribute('aria-pressed', !inSingles);
-  document.getElementById('secnav-single').setAttribute('aria-pressed', !!inSingles);
-  document.getElementById('secnav-single').className = base + (inSingles ? act : idle);
-}
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 window.addEventListener('scroll', updateSectionNav, { passive: true });
 
 // =========================================================================
@@ -145,13 +115,9 @@ const DIALOGS = {
   'add-product-modal':   { label: 'Add new menu item', close: () => toggleAddProductModal(false) },
   'cart-drawer':         { label: 'Pre-order bag', close: () => toggleCartDrawer(false) },
   'receipt-modal':       { label: 'GCash receipt', close: () => toggleReceiptModal(false) },
-<<<<<<< HEAD
   'flavor-picker-modal': { label: 'Choose cookies for your box', close: () => toggleFlavorPicker(false) },
   'track-modal':         { label: 'Track your order', close: () => toggleTrackModal(false) },
   'map-modal':           { label: 'Delivery map', close: () => toggleMapModal(false) },
-=======
-  'track-modal':         { label: 'Track your order', close: () => toggleTrackModal(false) },
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   'invoice-modal':       { label: 'Invoice', close: () => toggleInvoiceModal(false) },
   'admin-login-modal':   { label: 'Staff sign in', close: () => toggleAdminLoginModal(false) },
   'order-success-modal': { label: 'Order submitted', close: () => toggleOrderSuccess(false) },
@@ -219,11 +185,7 @@ function setupDialogs() {
   });
 }
 
-<<<<<<< HEAD
 const TAB_KEYS = ['today', 'inventory', 'orders', 'pos', 'cash', 'customize', 'deadline', 'records', 'settings'];
-=======
-const TAB_KEYS = ['inventory', 'orders', 'pos', 'cash', 'customize', 'deadline', 'records', 'settings'];
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 function syncTabAria(tab) {
   TAB_KEYS.forEach(k => {
     const b = document.getElementById('tab-' + k + '-btn'); if (!b) return;
@@ -272,21 +234,10 @@ function linkLabels(root = document) {
   if (bd && !bd.getAttribute('aria-label')) bd.setAttribute('aria-label', 'Bake date');
 }
 
-<<<<<<< HEAD
 
 function setupA11y() {
   setupDialogs(); setupTabs(); linkLabels();
   ['box-slot-indicator', 'mbar-title', 'mbar-sub', 'pos-bar-info', 'single-limit-note', 'cart-total-price'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('aria-live', 'polite'); });
-=======
-function carouselKey(e) {
-  if (e.key === 'ArrowLeft') { e.preventDefault(); prevCarouselSlide(); }
-  else if (e.key === 'ArrowRight') { e.preventDefault(); nextCarouselSlide(); }
-}
-
-function setupA11y() {
-  setupDialogs(); setupTabs(); linkLabels();
-  ['box-slot-indicator', 'carousel-page-indicator', 'mbar-title', 'mbar-sub', 'pos-bar-info', 'single-limit-note', 'cart-total-price'].forEach(id => { const el = document.getElementById(id); if (el) el.setAttribute('aria-live', 'polite'); });
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   const st = document.getElementById('pin-change-status'); if (st) st.setAttribute('role', 'status');
   const le = document.getElementById('admin-login-error'); if (le) le.setAttribute('role', 'alert');
   const tr = document.getElementById('track-result'); if (tr) tr.setAttribute('aria-live', 'polite');

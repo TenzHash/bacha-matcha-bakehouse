@@ -1,10 +1,6 @@
 import subprocess, json, os, re
 from playwright.async_api import async_playwright
-<<<<<<< HEAD
 PSQL=[os.path.join(os.environ.get('PGBIN',''),'psql'),'-h',os.environ.get('PGHOST','/tmp/pgdata'),'-p',os.environ.get('PGPORT','5544'),'-U',os.environ.get('PGUSER','postgres'),'-d',os.environ.get('PGDB','bacha_test'),'-qAt']
-=======
-PSQL=['/usr/lib/postgresql/16/bin/psql','-h','/tmp/pgdata','-p','5544','-U','nobody','-d','t4','-qAt']
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 def sh(sql, role='anon'):
     cmd=PSQL+(['-c',f'set role {role}'] if role else [])+['-c',sql]
     r=subprocess.run(cmd,capture_output=True,text=True)

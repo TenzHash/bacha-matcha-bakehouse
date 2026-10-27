@@ -1,18 +1,12 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
   overflow-x: hidden;
 }
-<<<<<<< HEAD
 /* "clip" hides sideways overflow WITHOUT turning the page into its own scroll box, which is what lets the header and sidebar stay put */
 @supports (overflow: clip) { html, body { overflow-x: clip; } }
-=======
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
 /* ---- Accessibility (Part 2) ---- */
 :focus-visible { outline: 3px solid #3F5A38 !important; outline-offset: 2px !important; }
@@ -22,17 +16,12 @@ main[tabindex="-1"]:focus { outline: none !important; }
 input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]), select, textarea { border-color: #9C8488; }
 /* Keep inputs at 16px on phones so iOS doesn't zoom the page when one is focused (zoom is now allowed) */
 @media (max-width: 1023px) {
-<<<<<<< HEAD
 input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]), select, textarea { font-size: 16px; }
-=======
-  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]), select, textarea { font-size: 16px; }
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 }
 /* Tablets: easier to read at arm's length, no double-tap zoom delay, tidy header */
 button, a, select, summary, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 header button { white-space: nowrap; }
 @media (min-width: 768px) and (pointer: coarse) {
-<<<<<<< HEAD
 [class*="text-[12px]"] { font-size: 14px !important; }
 [class*="text-[13px]"] { font-size: 15px !important; }
 }
@@ -41,22 +30,11 @@ header button { white-space: nowrap; }
 button:not(.no-tap), select, textarea,
   input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]) { min-height: 44px; }
 .qty-btn { min-width: 44px; }
-=======
-  [class*="text-[12px]"] { font-size: 14px !important; }
-  [class*="text-[13px]"] { font-size: 15px !important; }
-}
-/* Touch screens: 44px minimum targets */
-@media (pointer: coarse) {
-  button:not(.no-tap), select, textarea,
-  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]) { min-height: 44px; }
-  .qty-btn { min-width: 44px; }
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 }
 /* Small round controls keep their look but get a larger invisible hit area */
 .hit:not(.absolute) { position: relative; }
 .hit::after { content: ""; position: absolute; inset: -8px; }
 @media (prefers-reduced-motion: reduce) {
-<<<<<<< HEAD
 *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
 html { scroll-behavior: smooth; }
@@ -67,18 +45,6 @@ html { scroll-behavior: auto; } }
 #admin-live-indicator { display: none; }
 @media (min-width: 640px) {
 #admin-live-indicator.is-on { display: inline-flex; } }
-=======
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-}
-
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
-/* Admin "Live" pill: only on >=640px, and only while the admin view is open */
-#admin-live-indicator { display: none; }
-@media (min-width: 640px) { #admin-live-indicator.is-on { display: inline-flex; } }
-
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 .bg-gingham {
   background-color: #FFF7F9;
   background-image: 
@@ -86,54 +52,10 @@ html { scroll-behavior: smooth; }
     linear-gradient(rgba(249, 216, 223, 0.45) 50%, transparent 50%);
   background-size: 32px 32px;
 }
-<<<<<<< HEAD
 .soft-shadow { box-shadow: 0 8px 24px -4px rgba(255, 138, 158, 0.2), 0 4px 12px -2px rgba(126, 159, 118, 0.12); }
 
 /* 3D CAROUSEL SCENE (FULLY RESPONSIVE) */
 /* Side cards are only a peek: dim them and hide their button so half-cut text doesn't look broken */
-=======
-
-.soft-shadow { box-shadow: 0 8px 24px -4px rgba(255, 138, 158, 0.2), 0 4px 12px -2px rgba(126, 159, 118, 0.12); }
-
-/* 3D CAROUSEL SCENE (FULLY RESPONSIVE) */
-.carousel-3d-scene {
-  perspective: 1100px;
-  perspective-origin: center center;
-}
-.carousel-3d-container {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.carousel-flavor-card {
-  position: absolute;
-  width: 230px;
-  height: 330px;
-  top: calc(50% - 165px);
-  left: calc(50% - 115px);
-  transform-origin: center center;
-  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  will-change: transform, opacity;
-}
-@media (min-width: 640px) {
-  .carousel-flavor-card { width: 260px; height: 350px; top: calc(50% - 175px); left: calc(50% - 130px); }
-}
-@media (min-width: 1024px) {
-  .carousel-flavor-card { width: 290px; height: 380px; top: calc(50% - 190px); left: calc(50% - 145px); }
-}
-/* Side cards are only a peek: dim them and hide their button so half-cut text doesn't look broken */
-.carousel-flavor-card.is-side .card-cta { visibility: hidden; }
-.carousel-flavor-card.is-side .card-badge { display: none; }
-.carousel-flavor-card.is-side { filter: saturate(0.8); }
-
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 .slot-pop { animation: donutPop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 @keyframes donutPop {
   0% { transform: scale(0.15) translateY(-14px) rotate(-12deg); opacity: 0; }
@@ -149,25 +71,11 @@ html { scroll-behavior: smooth; }
   50% { opacity: 0.9; transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.3); }
   100% { opacity: 0; transform: translate(calc(var(--tx, 0) * 1.5), calc(var(--ty, 0) - 30px)) scale(1.9); }
 }
-<<<<<<< HEAD
-=======
-.sparkle-particle {
-  position: absolute; pointer-events: none; font-size: 14px;
-  animation: sparkleBurst 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards; z-index: 40;
-}
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 @keyframes sparkleBurst {
   0% { opacity: 1; transform: translate(0, 0) scale(0.2) rotate(0deg); }
   70% { opacity: 1; transform: translate(var(--tx, 0), var(--ty, 0)) scale(1.25) rotate(180deg); }
   100% { opacity: 0; transform: translate(calc(var(--tx, 0) * 1.3), calc(var(--ty, 0) - 15px)) scale(0.4) rotate(360deg); }
 }
-<<<<<<< HEAD
-=======
-.donut-tray-empty {
-  background: radial-gradient(circle at 45% 45%, #ffffff 0%, #fff0f3 65%, #f7d5dc 100%);
-  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(255, 255, 255, 0.8);
-}
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 .donut-cookie-shadow { filter: drop-shadow(0 6px 12px rgba(74, 62, 61, 0.25)); }
 
 /* Aesthetic Minimalist Scrollbar */
@@ -179,31 +87,19 @@ html { scroll-behavior: smooth; }
 .aesthetic-scroll::-webkit-scrollbar-track { background: transparent; }
 .aesthetic-scroll::-webkit-scrollbar-thumb { background-color: rgba(255, 138, 158, 0.45); border-radius: 9999px; }
 .aesthetic-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 138, 158, 0.75); }
-<<<<<<< HEAD
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-=======
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 .dialog-pop { animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 @keyframes modalPop {
   0% { transform: scale(0.85) translateY(12px); opacity: 0; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 @keyframes matchaPulse {
   0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(126, 159, 118, 0)); }
   50% { transform: scale(1.08); filter: drop-shadow(0 8px 16px rgba(126, 159, 118, 0.35)); }
 }
 .loading-bake-pulse { animation: matchaPulse 1.6s ease-in-out infinite; }
 @media print {
-<<<<<<< HEAD
 body.printing-invoice > *:not(#invoice-modal) { display: none !important; }
 body.printing-invoice #invoice-modal { position: static !important; opacity: 1 !important; background: #fff !important; backdrop-filter: none !important; }
 .no-print { display: none !important; }
@@ -759,9 +655,3 @@ html.store-locked, html.store-locked body, .shop-main, .shop-stage, .shop-pages 
   transition: transform .25s ease, opacity .2s ease, visibility 0s; }
 .ig-dock.is-collapsed .ig-pill { transform: translateX(-24px); opacity: 0; visibility: hidden; pointer-events: none; position: absolute; left: 22px; transition: transform .25s ease, opacity .2s ease, visibility 0s .25s; }
 @media (prefers-reduced-motion: reduce) { .ig-pill, .ig-toggle { transition: none !important; } }
-=======
-  body.printing-invoice > *:not(#invoice-modal) { display: none !important; }
-  body.printing-invoice #invoice-modal { position: static !important; opacity: 1 !important; background: #fff !important; backdrop-filter: none !important; }
-  .no-print { display: none !important; }
-}
->>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
