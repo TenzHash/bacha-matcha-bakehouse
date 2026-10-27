@@ -329,12 +329,20 @@ function renderBakeList() {
     (o.items || []).forEach(i => { const q = Number(i.qty) || 0; cnt[i.name] = (cnt[i.name] || 0) + q; pcs += q; });
   });
   const list = Object.entries(cnt).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+<<<<<<< HEAD
   host.innerHTML = `<div class="bake-list">${list.map(([n, q]) => `<div class="bake-row" data-name="${esc(n)}" data-qty="${q}"><span class="font-cute font-bold min-w-0">${esc(n)}</span><span class="bake-qty font-cute">${q}</span></div>`).join('')}</div>
+=======
+  host.innerHTML = `<table class="w-full text-sm"><thead><tr class="text-left text-bacha-text/75"><th scope="col" class="py-1 pr-2">Item to bake</th><th scope="col" class="py-1 text-right">Qty</th></tr></thead><tbody class="divide-y divide-bacha-gingham/50">${list.map(([n, q]) => `<tr><td class="py-1 pr-2 font-cute font-bold">${esc(n)}</td><td class="py-1 text-right font-cute font-bold text-bacha-matcha text-base">${q}</td></tr>`).join('')}</tbody></table>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
     <p class="text-[13px] font-bold text-bacha-text/75 pt-2 border-t border-bacha-gingham mt-1">${rows.length} order(s) · ${boxes} box(es) of 6 · ${pcs} item(s) in total</p>`;
 }
 async function copyBakeList() {
   const sel = document.getElementById('bake-batch'); if (!sel.value) return;
+<<<<<<< HEAD
   const lines = [...document.querySelectorAll('#bake-list-body .bake-row')].map(r => `${r.dataset.qty}× ${r.dataset.name}`);
+=======
+  const lines = [...document.querySelectorAll('#bake-list-body tbody tr')].map(tr => `${tr.children[1].textContent}× ${tr.children[0].textContent}`);
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   const text = `Bake list — ${sel.value}\n${lines.join('\n')}`;
   try { await navigator.clipboard.writeText(text); toast('Bake list copied'); } catch (e) { showBachaAlert(text, 'Bake list', '🧁'); }
 }

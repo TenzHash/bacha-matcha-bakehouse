@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en" class="store-locked">
+=======
+<html lang="en">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,11 +19,17 @@
   
   <!-- Styles: tailwind.css is pre-built (see build/README.txt); app.css is hand-written -->
   <link rel="stylesheet" href="css/tailwind.css">
+<<<<<<< HEAD
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/app.css">
   <!-- Libraries are bundled in vendor/ so the app also opens without internet -->
   <script src="vendor/lucide.min.js"></script>
   <script src="vendor/leaflet/leaflet.js"></script>
+=======
+  <link rel="stylesheet" href="css/app.css">
+  <!-- Libraries are bundled in vendor/ so the app also opens without internet -->
+  <script src="vendor/lucide.min.js"></script>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   <script src="vendor/supabase.js"></script>
 
   <!-- Fonts -->
@@ -92,7 +102,11 @@
           <span class="sm:hidden">Shop</span><span class="hidden sm:inline">Box Builder</span>
         </button>
         <!-- Hidden for customers; shown only after staff sign in (staff use the "Staff login" link in the footer) -->
+<<<<<<< HEAD
         <button id="nav-admin-btn" aria-label="Admin portal" onclick="openAdminAccess()" class="hidden flex px-2.5 sm:px-3.5 py-1.5 rounded-full font-cute font-semibold text-[13px] sm:text-sm transition bg-white text-bacha-text border border-bacha-gingham hover:bg-bacha-pinkLight items-center gap-1">
+=======
+        <button id="nav-admin-btn" onclick="openAdminAccess()" class="hidden flex px-2.5 sm:px-3.5 py-1.5 rounded-full font-cute font-semibold text-[13px] sm:text-sm transition bg-white text-bacha-text border border-bacha-gingham hover:bg-bacha-pinkLight items-center gap-1">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
           <i aria-hidden="true" data-lucide="shield-check" class="w-3.5 h-3.5 text-bacha-matcha"></i>
           <span class="hidden sm:inline">Admin Portal</span>
           <span class="sm:hidden">Admin</span>
@@ -121,7 +135,11 @@
   <!-- ========================================================================= -->
   <!-- 1. CUSTOMER SIDE: MOBILE & DESKTOP STORE VIEW                             -->
   <!-- ========================================================================= -->
+<<<<<<< HEAD
   <main id="store-view" tabindex="-1" class="shop-main">
+=======
+  <main id="store-view" tabindex="-1" class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 w-full flex flex-col min-h-0 relative">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
     
     <!-- Shop Closed Overlay Screen -->
     <div id="shop-closed-overlay" class="hidden absolute inset-0 z-30 bg-white/95 backdrop-blur-md rounded-3xl m-2 border-2 border-dashed border-bacha-strawberry/50 flex flex-col items-center justify-start pt-20 sm:pt-28 p-6 text-center soft-shadow space-y-4">
@@ -152,6 +170,7 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="shop-stage">
       <div id="shop-pages" class="shop-pages">
 
@@ -211,6 +230,111 @@
       </div>
       <nav id="shop-steps" class="shop-steps" aria-label="Order steps"></nav>
     </div>
+=======
+    <!-- Responsive Grid: Flex column on Mobile, 12-col layout on Large Desktop -->
+    <div id="box-mode-wrap" class="scroll-mt-28 lg:h-[calc(100vh-180px)] lg:min-h-[640px]">
+    <div class="flex flex-col lg:grid lg:grid-cols-12 gap-3.5 sm:gap-5 h-full min-h-0">
+      
+      <!-- TOP/RIGHT ON MOBILE: 3D Card Carousel Selection (Order 1 on mobile, Order 2 on desktop) -->
+      <section class="order-1 lg:order-2 lg:col-span-7 bg-white/95 rounded-2xl p-3 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow flex flex-col justify-between h-[480px] sm:h-[510px] lg:h-full min-h-0 overflow-hidden relative">
+        
+        <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-bacha-gingham">
+          <div>
+            <h2 class="font-cute font-bold text-lg sm:text-2xl text-bacha-berry leading-tight">Pick Flavors</h2>
+            <p class="text-[12px] sm:text-[13px] text-bacha-text/75 leading-none mt-0.5">Use side arrows or swipe to choose 6 cookies.</p>
+          </div>
+          <span id="carousel-page-indicator" class="font-cute text-[13px] sm:text-sm font-bold text-bacha-matcha bg-bacha-matchaLight/80 px-2 sm:px-2.5 py-0.5 rounded-full">
+            1 / 8
+          </span>
+        </div>
+
+        <!-- 3D Carousel Viewport -->
+        <div role="region" aria-roledescription="carousel" aria-label="Cookie flavors (use left and right arrow keys)" tabindex="0" onkeydown="carouselKey(event)" class="carousel-3d-scene flex-1 min-h-[360px] relative select-none overflow-hidden my-1">
+          <button onclick="prevCarouselSlide()" aria-label="Previous flavor" class="no-tap hit absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/95 backdrop-blur-sm border-2 border-bacha-strawberry/40 hover:border-bacha-strawberry text-bacha-berry hover:bg-bacha-berry hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95">
+            <i aria-hidden="true" data-lucide="chevron-left" class="w-4 h-4 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+          </button>
+
+          <div id="carousel-track" class="carousel-3d-container"></div>
+
+          <button onclick="nextCarouselSlide()" aria-label="Next flavor" class="no-tap hit absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/95 backdrop-blur-sm border-2 border-bacha-strawberry/40 hover:border-bacha-strawberry text-bacha-berry hover:bg-bacha-berry hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95">
+            <i aria-hidden="true" data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+          </button>
+        </div>
+
+        <div class="shrink-0 flex justify-center items-center gap-1.5 pt-1 border-t border-bacha-pinkLight" id="carousel-dots-container"></div>
+      </section>
+
+      <!-- BOTTOM/LEFT ON MOBILE: Box Builder & Slots (Order 2 on mobile, Order 1 on desktop) -->
+      <section id="box-builder-panel" class="scroll-mt-28 order-2 lg:order-1 lg:col-span-5 bg-white/95 rounded-2xl p-3.5 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow flex flex-col justify-between min-h-[380px] lg:h-full">
+        
+        <div class="shrink-0 mb-2 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bacha-pinkLight border border-bacha-gingham text-bacha-berry font-cute text-[12px] sm:text-[12px]">
+              <span>🌸</span> <span id="batch-pill-text">1 Batch Per Week Pre-Order</span>
+            </div>
+            <span id="box-slot-indicator" class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-matcha px-2 py-0.5 rounded-full bg-bacha-matchaLight">
+              0 / 6 Selected
+            </span>
+          </div>
+
+          <div class="bg-bacha-pinkLight/60 border border-bacha-gingham/80 p-1.5 sm:p-2 rounded-xl flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5 min-w-0 w-full">
+              <i aria-hidden="true" data-lucide="calendar" class="w-3.5 h-3.5 text-bacha-berry shrink-0"></i>
+              <span class="text-[12px] sm:text-[12px] font-cute font-bold text-bacha-text shrink-0">Bake Date:</span>
+              <select id="customer-preorder-date" onchange="updateSelectedBatchDate(this.value)" class="bg-white border border-bacha-gingham text-bacha-matcha font-cute font-bold text-[12px] sm:text-[13px] rounded-lg px-2 py-1 focus:outline-none focus:border-bacha-strawberry truncate w-full cursor-pointer">
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <h1 class="font-cute font-bold text-2xl sm:text-3xl lg:text-4xl text-bacha-berry tracking-wide leading-none">
+              CUSTOM BOX OF 6
+            </h1>
+            <p class="text-bacha-matcha font-cute text-[12px] sm:text-sm mt-0.5 font-semibold">
+              Freshly baked straight from our weekly oven batch ♡
+            </p>
+          </div>
+        </div>
+
+        <!-- 2x3 Pastry Box (Scales neatly on phones) -->
+        <div class="flex-1 min-h-[220px] bg-bacha-pinkLight/85 rounded-2xl p-2 sm:p-3 border-2 border-dashed border-bacha-strawberry/50 shadow-inner flex flex-col justify-center">
+          <div class="grid grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-2 xl:grid-cols-2 xl:grid-rows-3 gap-2 sm:gap-3.5 h-full w-full place-items-center" id="box-slots-container"></div>
+        </div>
+
+        <!-- Subtotal & Pre-Order Button -->
+        <div class="shrink-0 w-full mt-2 pt-2 border-t border-bacha-gingham flex items-center justify-between">
+          <div>
+            <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium leading-none">Box Subtotal</p>
+            <p id="box-total-price" class="font-cute font-bold text-xl sm:text-2xl text-bacha-matcha leading-tight mt-0.5">₱0</p>
+          </div>
+          <div class="flex gap-1.5">
+            <button onclick="clearBox()" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-[13px] sm:text-sm font-cute font-semibold border border-bacha-gingham hover:bg-bacha-pinkLight text-bacha-text/75 transition">
+              Clear
+            </button>
+            <button id="add-box-btn" onclick="addCustomBoxToCart()" disabled class="px-3.5 sm:px-4 py-1.5 rounded-xl text-[13px] sm:text-sm font-cute font-bold bg-gray-200 text-gray-600 cursor-not-allowed transition shadow-sm">
+              + Pre-Order Box
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+    </div>
+
+    <!-- SINGLE ORDERS / ALA-CARTE & DRINKS -->
+    <section id="single-menu-section" class="scroll-mt-28 hidden mt-4 bg-white/95 rounded-2xl p-3 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bacha-gingham pb-2">
+        <div>
+          <h2 class="font-cute font-bold text-xl sm:text-3xl text-bacha-berry leading-tight">Ala-Carte &amp; Drinks</h2>
+          <p class="text-[12px] sm:text-sm text-bacha-text/75">Order cookies, drinks and pastries individually.</p>
+          <p id="single-limit-note" class="text-[12px] font-bold text-amber-700 mt-0.5"></p>
+        </div>
+        <div id="single-filter-pills" class="flex gap-1.5 overflow-x-auto no-scrollbar"></div>
+      </div>
+      <div id="single-menu-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3"></div>
+    </section>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
   </main>
 
@@ -219,6 +343,7 @@
   <!-- ========================================================================= -->
   <main id="admin-view" tabindex="-1" class="hidden flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-24 lg:pb-4 w-full">
     
+<<<<<<< HEAD
     <div class="admin-layout">
       <div id="admin-scrim" class="admin-scrim" onclick="toggleAdminNav(false)"></div>
 
@@ -274,6 +399,51 @@
 
     <!-- TAB 1: INVENTORY -->
     <div id="admin-inventory-tab" class="hidden space-y-4">
+=======
+    <div class="mb-4 border-b border-bacha-gingham pb-3 space-y-3">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <h1 class="font-cute font-bold text-xl sm:text-3xl text-bacha-matchaDark leading-tight">Weekly Batch Inventory &amp; Control Hub</h1>
+          <p class="text-[13px] sm:text-sm text-bacha-text/75 mt-0.5">Review GCash payments, customize flavor menus, manage deadlines, and oven stock.</p>
+        </div>
+        <button onclick="adminLogout()" class="px-3 py-2 rounded-2xl font-cute font-semibold text-[13px] sm:text-sm bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-all duration-200 flex items-center gap-1 shrink-0">
+          <i aria-hidden="true" data-lucide="log-out" class="w-4 h-4"></i>
+          <span>Exit</span>
+        </button>
+      </div>
+
+      <!-- Tabs wrap into a grid on phones so nothing is cut off -->
+      <nav class="grid grid-cols-3 sm:flex sm:flex-wrap gap-1.5 p-1.5 bg-white rounded-2xl border border-bacha-gingham shadow-sm" role="tablist">
+          <button id="tab-inventory-btn" onclick="switchAdminTab('inventory')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight bg-bacha-matcha text-white shadow-sm">
+            <span>Inventory</span>
+          </button>
+          <button id="tab-orders-btn" onclick="switchAdminTab('orders')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <span>Orders</span><span id="orders-badge-count" class="px-1.5 py-0.5 bg-amber-700 text-white text-[12px] font-bold rounded-full">0</span>
+          </button>
+          <button id="tab-pos-btn" onclick="switchAdminTab('pos')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="calculator" class="w-4 h-4 shrink-0"></i><span>POS</span>
+          </button>
+          <button id="tab-cash-btn" onclick="switchAdminTab('cash')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="wallet" class="w-4 h-4 shrink-0"></i><span>Cash</span>
+          </button>
+          <button id="tab-customize-btn" onclick="switchAdminTab('customize')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="sparkles" class="w-4 h-4 shrink-0"></i><span class="sm:hidden">Menu</span><span class="hidden sm:inline">Menu Edit</span>
+          </button>
+          <button id="tab-deadline-btn" onclick="switchAdminTab('deadline')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="clock" class="w-4 h-4 shrink-0"></i><span class="sm:hidden">Store</span><span class="hidden sm:inline">Store Control</span>
+          </button>
+          <button id="tab-records-btn" onclick="switchAdminTab('records')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="archive" class="w-4 h-4 shrink-0"></i><span>Records</span>
+          </button>
+          <button id="tab-settings-btn" onclick="switchAdminTab('settings')" class="px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="key-round" class="w-4 h-4 shrink-0"></i><span>PIN</span>
+          </button>
+      </nav>
+    </div>
+
+    <!-- TAB 1: INVENTORY -->
+    <div id="admin-inventory-tab" class="space-y-4">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
         <div class="bg-white p-3 rounded-2xl border border-bacha-gingham shadow-sm">
           <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium">Weekly Total Stock</p>
@@ -309,7 +479,24 @@
           </button>
         </div>
 
+<<<<<<< HEAD
         <div id="inventory-table-body" class="inv-grid"></div>
+=======
+        <div class="overflow-x-auto aesthetic-scroll">
+          <table class="w-full text-left text-sm font-medium min-w-[640px]">
+            <thead>
+              <tr class="border-b border-bacha-gingham text-bacha-text/75">
+                <th scope="col" class="pb-2.5 px-2">Flavor Details</th>
+                <th scope="col" class="pb-2.5 px-2">Price</th>
+                <th scope="col" class="pb-2.5 px-2 text-center">Remaining Quantity</th>
+                <th scope="col" class="pb-2.5 px-2 text-center">Oven Adjustments</th>
+                <th scope="col" class="pb-2.5 px-2 text-right">Customer Status</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body" class="divide-y divide-bacha-gingham/40"></tbody>
+          </table>
+        </div>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
       </div>
     </div>
 
@@ -332,6 +519,7 @@
           <div id="bake-list-body"></div>
         </div>
       </details>
+<<<<<<< HEAD
       <details id="map-panel" class="bg-white rounded-2xl border border-bacha-gingham">
         <summary class="cursor-pointer select-none px-3 py-2.5 font-cute font-bold text-sm text-bacha-berry min-h-[44px] flex items-center">🗺️ Delivery map (where the orders are going)</summary>
         <div class="px-3 pb-3 space-y-2">
@@ -347,6 +535,10 @@
       </details>
       <div class="orders-toolbar">
         <input type="search" id="orders-search" placeholder="Search order ID, name or number" oninput="setOrdersSearch(this.value)" class="px-3 py-2 rounded-xl border border-bacha-gingham bg-white text-sm focus:outline-none focus:border-bacha-strawberry" />
+=======
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <input type="search" id="orders-search" placeholder="Search order ID, name or number" oninput="setOrdersSearch(this.value)" class="w-full sm:w-72 px-3 py-2 rounded-xl border border-bacha-gingham bg-white text-sm focus:outline-none focus:border-bacha-strawberry" />
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
         <button id="alerts-btn" type="button" onclick="toggleAlerts()" aria-pressed="false" class="shrink-0 px-3 py-2 rounded-full font-cute font-bold text-[13px] border border-bacha-gingham bg-white text-bacha-text whitespace-nowrap">🔕 Alerts off</button>
         <div id="orders-filter-pills" class="flex gap-1.5 overflow-x-auto no-scrollbar"></div>
       </div>
@@ -358,7 +550,11 @@
     <div id="admin-pos-tab" class="hidden">
       <div class="grid md:grid-cols-12 gap-3">
         <section class="min-w-0 md:col-span-7 lg:col-span-8 bg-white rounded-2xl p-3 sm:p-4 border border-bacha-gingham soft-shadow space-y-2.5">
+<<<<<<< HEAD
           <div class="flex flex-wrap items-start justify-between gap-2">
+=======
+          <div class="flex items-start justify-between gap-2">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
             <div>
               <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry leading-none">Counter Register</h2>
               <p class="text-[12px] sm:text-sm text-bacha-text/75 mt-0.5">Tap an item to add it to the ticket.</p>
@@ -634,8 +830,11 @@
       </div>
     </div>
 
+<<<<<<< HEAD
       </div>
     </div>
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   </main>
 
   <!-- ADD NEW PRODUCT MODAL WITH IMAGE UPLOAD -->
@@ -754,6 +953,7 @@
               <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">Delivery Address / Landmarks <span class="text-rose-700">*</span></label>
               <textarea id="cust-address" autocomplete="street-address" rows="2" placeholder="House no., street, barangay, landmark" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry"></textarea>
             </div>
+<<<<<<< HEAD
             <div id="pin-wrap">
               <label for="pin-search" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Pin your delivery location <span class="text-rose-700">*</span></label>
               <div id="pin-picker">
@@ -771,6 +971,12 @@
                 <p class="text-[12px] text-bacha-text/75 mt-0.5">The map could not load. In Google Maps: tap your location pin → Share → Copy link.</p>
               </div>
               <input type="hidden" id="pin-link" />
+=======
+            <div>
+              <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">Google Maps Pin Link <span class="text-rose-700">*</span></label>
+              <input type="text" id="cust-maps" placeholder="https://maps.app.goo.gl/..." class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+              <p class="text-[12px] text-bacha-text/75 mt-0.5">In Google Maps: tap your location pin → Share → Copy link.</p>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
             </div>
             <p id="delivery-area-note" class="hidden text-[12px] font-bold text-bacha-text/80 bg-bacha-pinkLight/60 p-2 rounded-lg border border-bacha-gingham"></p>
             <div id="area-ok-wrap" class="hidden"><label id="area-ok-label" class="flex items-start gap-2 text-[13px] font-bold text-bacha-text/80 cursor-pointer rounded-lg"><input type="checkbox" id="cust-area-ok" class="mt-0.5 w-5 h-5 accent-[#4F6E48] shrink-0" /><span>My address is inside the delivery area.</span></label></div>
@@ -844,6 +1050,7 @@
   </div>
 
   <!-- TRACK ORDER MODAL -->
+<<<<<<< HEAD
   <!-- Cookie picker (opens when an empty spot in the box is tapped) -->
   <div id="flavor-picker-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
     <div class="relative w-full max-w-2xl bg-white rounded-3xl p-4 sm:p-5 border-2 border-bacha-strawberry/35 soft-shadow flex flex-col max-h-[92vh]">
@@ -861,6 +1068,8 @@
     </div>
   </div>
 
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   <div id="track-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
     <div class="relative w-full max-w-sm bg-white rounded-3xl p-5 border-2 border-bacha-strawberry/35 soft-shadow space-y-3 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-bacha-gingham">
@@ -874,6 +1083,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- ORDER MAP MODAL (admin) -->
   <div id="map-modal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)toggleMapModal(false)">
     <div class="relative w-full max-w-lg bg-white rounded-3xl p-4 sm:p-5 border-2 border-bacha-strawberry/35 soft-shadow space-y-3 max-h-[92vh] overflow-y-auto">
@@ -892,6 +1102,8 @@
     </div>
   </div>
 
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   <!-- INVOICE MODAL -->
   <div id="invoice-modal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
     <div class="relative w-full max-w-sm bg-white rounded-2xl p-5 border border-bacha-gingham max-h-[92vh] overflow-y-auto">
@@ -903,12 +1115,16 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <aside aria-label="Social">
     <div id="ig-dock" class="ig-dock is-collapsed hidden">
       <button type="button" id="ig-toggle" class="ig-toggle" aria-expanded="false" aria-controls="ig-float" aria-label="Show the Instagram message button" onclick="toggleIgDock()"><span class="ig-ico-open"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></span><span class="ig-ico-closed"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span></button>
       <a id="ig-float" href="#" target="_blank" rel="noopener" class="ig-pill font-cute"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg><span>Message us<span class="hidden sm:inline"> on Instagram</span></span></a>
     </div>
   </aside>
+=======
+  <aside aria-label="Social"><a id="ig-float" href="#" target="_blank" rel="noopener" class="hidden inline-flex fixed bottom-24 lg:bottom-4 left-3 lg:left-4 z-30 px-3 py-2 rounded-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-cute font-bold text-[13px] shadow-lg items-center gap-1.5">📷 <span>Message us<span class="hidden sm:inline"> on Instagram</span></span></a></aside>
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
   <!-- Mobile sticky bag bar (customer) -->
   <div id="mobile-bag-bar" role="region" aria-label="Your box and bag" class="hidden fixed bottom-0 inset-x-0 z-30 lg:hidden bg-white/95 backdrop-blur-sm border-t-2 border-bacha-strawberry/30 px-3 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] items-center gap-3 shadow-[0_-6px_20px_-8px_rgba(255,138,158,0.45)]">
@@ -950,7 +1166,11 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <footer id="site-footer" class="shop-footer font-cute">
+=======
+  <footer id="site-footer" class="max-w-7xl mx-auto w-full px-3 sm:px-6 pb-28 lg:pb-6 pt-2 text-center text-[13px] text-bacha-text/75 font-cute">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
     © Bacha Matcha &amp; Bakehouse · <button onclick="openAdminAccess()" class="underline hover:text-bacha-matcha px-2 py-1.5">Staff login</button>
   </footer>
 
@@ -1050,8 +1270,11 @@
   <script src="js/10-alerts.js"></script>
   <script src="js/11-cash-records.js"></script>
   <script src="js/12-messages.js"></script>
+<<<<<<< HEAD
   <script src="js/14-today.js"></script>
   <script src="js/15-map.js"></script>
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   <script src="js/13-init.js"></script>
 </body>
 </html>

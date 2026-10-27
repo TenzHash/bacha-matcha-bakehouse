@@ -19,8 +19,13 @@ function renderCustomizeTab() {
   container.innerHTML = products.map(prod => `
     <div class="bg-white p-3 sm:p-3.5 rounded-2xl border border-bacha-gingham shadow-sm space-y-2.5 relative ${prod.is_active === false ? 'grayscale bg-gray-50' : ''}">
       
+<<<<<<< HEAD
       <div class="cust-top">
         <div class="cust-name">
+=======
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
           <img src="${esc(prod.image)}" alt="${esc(prod.name)}" class="w-10 h-10 rounded-full object-cover border border-bacha-gingham shrink-0" onerror="this.src='images/classic.png';" />
           <div class="flex-1 min-w-0">
             <input type="text" id="edit-name-${prod.id}" aria-label="Flavor name" value="${esc(prod.name)}" class="w-full font-cute font-bold text-sm text-bacha-berry border border-transparent hover:border-bacha-gingham focus:border-bacha-strawberry rounded-lg px-1 py-0.5 focus:outline-none" />
@@ -28,7 +33,11 @@ function renderCustomizeTab() {
           </div>
         </div>
 
+<<<<<<< HEAD
         <div class="cust-actions">
+=======
+        <div class="flex items-center gap-1 shrink-0">
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
           <button onclick="toggleProductActiveStatus(${prod.id})" title="${prod.is_active === false ? 'Click to make Available' : 'Click to make Unavailable'}" class="px-2 py-1 rounded-lg font-cute text-[12px] font-bold ${prod.is_active === false ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'} transition">
             ${prod.is_active === false ? '🚫 Unavail' : '✓ Avail'}
           </button>

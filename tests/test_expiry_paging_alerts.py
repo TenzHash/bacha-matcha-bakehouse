@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from env import *
 exec(open(HERE/'test_admin_tools_and_demo.py').read().split("async def login")[0])
+=======
+import sys; sys.path.insert(0,"/tmp/claude-0/work")
+exec(open('test_admin_tools_and_demo.py').read().split("async def login")[0])
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 AUDIO="""window.__osc=0;window.AudioContext=function(){return {state:'running',currentTime:0,destination:{},resume(){return Promise.resolve()},createOscillator(){window.__osc++;return {type:'',frequency:{value:0},connect(){},start(){},stop(){}}},createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}}}}}"""
 async def newpage2(b):
     ctx=await b.new_context(viewport={'width':1280,'height':800},timezone_id='Asia/Manila')

@@ -88,7 +88,11 @@ function renderAdmin() {
             <h2 class="font-cute font-bold text-base text-bacha-text">${esc(o.customer_name)} <span class="text-[13px] text-bacha-text/75 font-normal">(${esc(o.contact_number)})</span></h2>
             <p class="text-[13px] text-bacha-text/75 italic">"${esc(o.notes)}"</p>
             ${o.order_type !== 'pos' ? `<div class="text-[12px] font-bold text-bacha-text/75">${o.fulfillment === 'delivery' ? '🛵 Delivery' : '🛍️ Pick-up (coordinate via chat)'}${o.payment_method === 'COD' ? ` • <span class="text-amber-700">💵 COD – collect exact ₱${o.total_amount}</span>` : ' • 📱 GCash'}</div>` : ''}
+<<<<<<< HEAD
             ${o.fulfillment === 'delivery' ? `<div class="text-[13px] text-bacha-text/80"><p>📍 ${esc(o.delivery_address)}</p><div class="flex flex-wrap items-center gap-2 mt-1">${parseMapsLink(o.maps_link) ? `<button onclick="viewOrderMap(this.dataset.id)" data-id="${esc(o.id)}" class="px-2.5 py-1 rounded-lg bg-bacha-matchaLight/70 hover:bg-bacha-matchaLight border border-bacha-matcha/30 text-bacha-matchaDark font-cute text-sm font-bold flex items-center gap-1.5 transition"><i aria-hidden="true" data-lucide="map-pin" class="w-3.5 h-3.5"></i>View map</button>` : ''}${/^https?:\/\//i.test(o.maps_link || '') ? `<a href="${esc(o.maps_link)}" target="_blank" rel="noopener" class="text-blue-700 underline font-bold text-[13px]">Open in Google Maps ↗</a>` : ''}</div></div>` : ''}
+=======
+            ${o.fulfillment === 'delivery' ? `<p class="text-[13px] text-bacha-text/80">📍 ${esc(o.delivery_address)}${/^https?:\/\//i.test(o.maps_link || '') ? ` <a href="${esc(o.maps_link)}" target="_blank" rel="noopener" class="text-blue-700 underline font-bold">Open Maps pin ↗</a>` : ''}</p>` : ''}
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
             ${o.receipt_url ? `<div class="pt-2 flex items-center gap-3">
               <button onclick="inspectReceipt(this.dataset.id)" data-id="${esc(o.id)}" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-cute text-sm font-bold flex items-center gap-1.5 transition">
@@ -140,6 +144,7 @@ function renderAdmin() {
 
   renderBakeList();
   const invContainer = document.getElementById('inventory-table-body');
+<<<<<<< HEAD
   invContainer.innerHTML = products.map(p => {
     const stockTone = p.stock <= 0 ? 'text-rose-700' : p.stock <= lowStockLimit() ? 'text-amber-700' : 'text-bacha-text';
     const pill = p.is_active === false ? 'bg-gray-100 text-gray-600' : p.stock > lowStockLimit() ? 'bg-emerald-100 text-emerald-700' : p.stock > 0 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700';
@@ -162,6 +167,35 @@ function renderAdmin() {
       <div class="inv-adj" role="group" aria-label="Adjust ${esc(p.name)} stock">${adj(-5)}${adj(-1)}${adj(1, 'text-bacha-matcha')}${adj(6, 'text-bacha-matcha')}${adj(12, 'text-bacha-berry')}</div>
     </article>`;
   }).join('');
+=======
+  invContainer.innerHTML = products.map(p => `
+    <tr class="hover:bg-bacha-pinkLight/30 transition ${p.is_active === false ? 'grayscale' : ''}">
+      <td class="py-2.5 px-2 flex items-center gap-2.5">
+        <img src="${esc(p.image)}" alt="${esc(p.name)}" class="w-7 h-7 rounded-full object-cover shrink-0 shadow-sm" onerror="this.src='images/classic.png';" />
+        <div>
+          <span class="font-cute font-bold text-sm text-bacha-text block leading-tight">${esc(p.name)}</span>
+          <span class="text-[12px] text-bacha-text/75">${catOf(p)} • Cap: ${p.max_stock || 30}</span>
+        </div>
+      </td>
+      <td class="py-2.5 px-2 font-cute font-bold text-bacha-matcha text-sm">₱${p.price}</td>
+      <td class="py-2.5 px-2 text-center font-cute font-bold text-base ${p.stock <= 0 ? 'text-rose-700' : p.stock <= lowStockLimit() ? 'text-amber-700' : 'text-bacha-text'}">${p.stock}</td>
+      <td class="py-2.5 px-2 text-center">
+        <div class="inline-flex items-center gap-1">
+          <button onclick="adjustInventory(${p.id}, -5)" aria-label="Adjust ${esc(p.name)} stock by -5" class="qty-btn w-6 h-6 rounded border border-bacha-gingham bg-white hover:bg-bacha-pinkLight font-bold text-sm">-5</button>
+          <button onclick="adjustInventory(${p.id}, -1)" aria-label="Adjust ${esc(p.name)} stock by -1" class="qty-btn w-6 h-6 rounded border border-bacha-gingham bg-white hover:bg-bacha-pinkLight font-bold text-sm">-1</button>
+          <button onclick="adjustInventory(${p.id}, 1)" aria-label="Adjust ${esc(p.name)} stock by 1" class="qty-btn w-6 h-6 rounded border border-bacha-gingham bg-white hover:bg-bacha-pinkLight font-bold text-sm text-bacha-matcha">+1</button>
+          <button onclick="adjustInventory(${p.id}, 6)" aria-label="Adjust ${esc(p.name)} stock by 6" class="qty-btn w-7 h-6 rounded border border-bacha-gingham bg-white hover:bg-bacha-pinkLight font-bold text-[12px] text-bacha-matcha">+6</button>
+          <button onclick="adjustInventory(${p.id}, 12)" aria-label="Adjust ${esc(p.name)} stock by 12" class="qty-btn w-7 h-6 rounded border border-bacha-gingham bg-white hover:bg-bacha-pinkLight font-bold text-[12px] text-bacha-berry">+12</button>
+        </div>
+      </td>
+      <td class="py-2.5 px-2 text-right">
+        <span class="px-2 py-0.5 rounded-full text-[12px] font-bold ${p.is_active === false ? 'bg-gray-100 text-gray-600' : p.stock > lowStockLimit() ? 'bg-emerald-100 text-emerald-700' : p.stock > 0 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}">
+          ${p.is_active === false ? 'Unavailable' : p.stock > lowStockLimit() ? 'Available' : p.stock > 0 ? 'Low Stock' : 'Out of Oven'}
+        </span>
+      </td>
+    </tr>
+  `).join('');
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
   updateLiveMetrics();
   lucide.createIcons();
@@ -263,7 +297,10 @@ function switchView(view) {
   const on = pill + ' bg-bacha-matcha text-white shadow-sm';
   const off = pill + ' bg-white text-bacha-text border border-bacha-gingham hover:bg-bacha-pinkLight';
 
+<<<<<<< HEAD
   document.documentElement.classList.toggle('store-locked', view === 'store');
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   if (view === 'store') {
     storeView.classList.remove('hidden');
     adminView.classList.add('hidden');
@@ -272,7 +309,10 @@ function switchView(view) {
     storeBtn.className = on;
     adminBtn.className = off + ' flex items-center gap-1';
     renderBoxBuilder();
+<<<<<<< HEAD
     if (typeof goShopPage === 'function') goShopPage(shopPage);
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   } else {
     storeView.classList.add('hidden');
     adminView.classList.remove('hidden');
@@ -290,9 +330,16 @@ function switchView(view) {
 }
 
 function switchAdminTab(tab) {
+<<<<<<< HEAD
   const tabs = ['today', 'inventory', 'orders', 'pos', 'cash', 'customize', 'deadline', 'records', 'settings'];
   const activeClass = "admin-tab is-active";
   const inactiveClass = "admin-tab";
+=======
+  const tabs = ['inventory', 'orders', 'pos', 'cash', 'customize', 'deadline', 'records', 'settings'];
+  const base = "px-2 sm:px-3.5 py-2 rounded-xl font-cute font-semibold text-[13px] sm:text-sm transition-all duration-200 flex items-center justify-center gap-1 text-center leading-tight";
+  const activeClass = base + " bg-bacha-matcha text-white shadow-sm";
+  const inactiveClass = base + " text-bacha-text hover:bg-bacha-pinkLight";
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   activeAdminTab = tab;
   syncTabAria(tab);
 
@@ -303,9 +350,12 @@ function switchAdminTab(tab) {
     if (t === tab) {
       viewEl.classList.remove('hidden');
       btnEl.className = activeClass;
+<<<<<<< HEAD
       const ttl = document.getElementById('admin-tab-title'), lbl = btnEl.querySelector('.admin-tab-label');
       if (ttl && lbl) ttl.textContent = lbl.textContent;
       if (t === 'today') renderToday();
+=======
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
       if (t === 'customize') renderCustomizeTab();
       if (t === 'pos') renderPOS();
       if (t === 'cash' && typeof renderCashTab === 'function') renderCashTab();
@@ -315,6 +365,7 @@ function switchAdminTab(tab) {
       btnEl.className = inactiveClass;
     }
   });
+<<<<<<< HEAD
   toggleAdminNav(false);
   window.scrollTo(0, 0);
   updatePosBar();
@@ -330,4 +381,9 @@ function toggleAdminNav(open) {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { const sb = document.getElementById('admin-sidebar'); if (sb && sb.classList.contains('is-open')) toggleAdminNav(false); } });
 
+=======
+  updatePosBar();
+}
+
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 

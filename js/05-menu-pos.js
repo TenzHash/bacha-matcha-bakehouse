@@ -17,11 +17,21 @@ function toggleBtnClass(on, color = 'bg-bacha-matcha') {
 }
 
 function applyDisplayMode() {
+<<<<<<< HEAD
   if (!document.getElementById('shop-pages')) return;
+=======
+  const wrap = document.getElementById('box-mode-wrap');
+  const singles = document.getElementById('single-menu-section');
+  if (!wrap || !singles) return;
+  const showBox = displayMode !== 'singles', showSingles = displayMode !== 'box';
+  wrap.className = !showBox ? 'hidden' : 'scroll-mt-28 lg:h-[calc(100vh-' + (displayMode === 'both' ? '180' : '130') + 'px)] lg:min-h-[640px]';
+  singles.classList.toggle('hidden', !showSingles);
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   [['box', 'btn-disp-box'], ['singles', 'btn-disp-singles'], ['both', 'btn-disp-both']].forEach(([m, id]) => {
     const el = document.getElementById(id);
     if (el) { el.className = toggleBtnClass(displayMode === m); el.setAttribute('aria-pressed', displayMode === m); }
   });
+<<<<<<< HEAD
   const list = shopPageList();
   if (!list.includes(shopPage)) shopPage = list[0];
   goShopPage(shopPage);
@@ -65,6 +75,12 @@ function renderShopSteps() {
 let _rzT;
 window.addEventListener('resize', () => { clearTimeout(_rzT); _rzT = setTimeout(() => { if (shopPage === 'singles') renderSingleMenu(); }, 150); });
 function singlesStep(d) { singlesPage = Math.max(0, singlesPage + d); renderSingleMenu(); }
+=======
+  renderSingleMenu();
+  updateSectionNav(); updateMobileBar();
+}
+
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
 async function loadDisplayMode() {
   if (!isSupabaseConfigured || !sbClient) return;
@@ -91,7 +107,11 @@ async function loadDisplayMode() {
 }
 
 // ---- Customer single menu ----
+<<<<<<< HEAD
 function setSingleFilter(c) { singleFilter = c; singlesPage = 0; renderSingleMenu(); }
+=======
+function setSingleFilter(c) { singleFilter = c; renderSingleMenu(); }
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 
 function renderSingleMenu() {
   const grid = document.getElementById('single-menu-grid');
@@ -102,6 +122,7 @@ function renderSingleMenu() {
   if (appConfig.dailyDrinks > 0) note.push(`${Math.max(0, appConfig.dailyDrinks - drinksSoldToday())} drinks left today`);
   document.getElementById('single-limit-note').innerText = note.join(' • ');
   const list = products.filter(p => p.is_active !== false && (singleFilter === 'All' || catOf(p) === singleFilter));
+<<<<<<< HEAD
   // every item is shown; the list scrolls inside its card
   const W = grid.clientWidth || 320;
   const cols = W < 600 ? 1 : W < 960 ? 2 : 3, pages = 1; singlesPage = 0;
@@ -129,6 +150,27 @@ function renderSingleMenu() {
       </article>`;
   }).join('') : `<p class="col-span-full text-center py-8 text-sm text-bacha-text/75 font-cute">No items in this category yet.</p>`;
   if (window.lucide) lucide.createIcons();
+=======
+  grid.innerHTML = list.length ? list.map(p => {
+    const left = p.stock - usedInCart(p.id), blocked = catOf(p) === 'Drinks' && drinkAllowance() <= 0, out = left <= 0 || blocked;
+    return `
+      <div class="relative bg-white rounded-2xl p-2.5 border-2 border-bacha-strawberry/25 shadow-sm flex flex-col gap-1.5 ${out ? 'grayscale' : ''}">
+        ${p.promo_tag ? `<span class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-bacha-berry text-white text-[12px] font-cute font-bold z-10">${esc(p.promo_tag)}</span>` : ''}
+        <div class="w-full aspect-square rounded-xl overflow-hidden bg-bacha-pinkLight/70">
+          <img src="${esc(p.image)}" alt="${esc(p.name)}" class="w-full h-full object-cover" onerror="this.src='images/classic.png';" />
+        </div>
+        <div class="flex items-start justify-between gap-1">
+          <h3 class="font-cute font-bold text-[13px] sm:text-sm text-bacha-berry leading-tight">${esc(p.name)}</h3>
+          <span class="font-cute font-bold text-sm text-bacha-matcha shrink-0">₱${p.price}</span>
+        </div>
+        <p class="text-[12px] text-bacha-text/75 line-clamp-2 leading-snug">${esc(p.desc || p.description || '')}</p>
+        <div class="mt-auto flex items-center justify-between gap-1.5">
+          <span class="text-[12px] font-bold ${out ? 'text-rose-700' : left <= lowStockLimit() ? 'text-amber-700' : 'text-bacha-matcha'}">${left <= 0 ? 'Sold Out' : blocked ? 'Limit reached' : left + ' left'}</span>
+          <button onclick="addSingleToCart(${p.id})" ${out ? 'disabled' : ''} class="px-3 py-1 rounded-xl font-cute font-bold text-[13px] ${out ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-bacha-matcha hover:bg-bacha-matchaDark text-white'} transition">+ Add</button>
+        </div>
+      </div>`;
+  }).join('') : `<p class="col-span-full text-center py-8 text-sm text-bacha-text/75 font-cute">No items in this category yet.</p>`;
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 }
 
 // ---- Cashier POS ----
@@ -206,7 +248,11 @@ function renderPOS() {
   document.getElementById('pos-cash-wrap').classList.toggle('hidden', posPayment !== 'Cash Walk-in');
 
   const todays = orders.filter(o => o.order_type === 'pos' && o.status === ST.POS && o.created_at && new Date(o.created_at).toDateString() === new Date().toDateString());
+<<<<<<< HEAD
   document.getElementById('pos-today-summary').innerHTML = `Today: ${todays.length} sale${todays.length === 1 ? "" : "s"} · ₱${todays.reduce((a, o) => a + Number(o.total_amount || 0), 0)}`;
+=======
+  document.getElementById('pos-today-summary').innerHTML = `Today: ${todays.length} sale${todays.length === 1 ? '' : 's'}<br>₱${todays.reduce((a, o) => a + Number(o.total_amount || 0), 0)}`;
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
   updatePosTotals();
   updatePosBar();
 }

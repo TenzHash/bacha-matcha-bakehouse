@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from env import *
 import asyncio, json, sys
 from realh import *
 from playwright.async_api import async_playwright
 RD=RD_PATH.read_text()
+=======
+import sys; sys.path.insert(0,"/tmp/claude-0/work")
+import asyncio, json, sys
+from realh import *
+from playwright.async_api import async_playwright
+URL='file:///tmp/claude-0/work/site_p5/index.html'
+RD=open('/tmp/claude-0/work/real_db.js').read()
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
 PNG=bytes.fromhex('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d49444154789c6300010000000500010d0a2db40000000049454e44ae426082')
 res=[]
 def ok(n,c,x=''):
@@ -39,7 +48,11 @@ async def main():
         await pg.evaluate("(()=>{submitCustomerOrder();return 1})()")
         await pg.wait_for_timeout(2500)
         out,_=sh("select id,total_amount,status,receipt_url from orders",role=None); print(out)
+<<<<<<< HEAD
         ok('order stored with SERVER total (cart price tampered to 6)', '|' in out and 300 <= float(out.split('|')[1]) <= 450, out[:120])
+=======
+        ok('order stored with SERVER total (cart price tampered to 6)', '|' in out and '|3' in out.replace('.00',''), out[:120])
+>>>>>>> 78a4d4c6a22f466a33e669601322f3c4a3e70fc5
         oid=out.split('|')[0]
         await modal_ok(pg)
         # tracking
