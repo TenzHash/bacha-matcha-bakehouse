@@ -1,0 +1,48 @@
+import sys, os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from env import *
+import asyncio
+from playwright.async_api import async_playwright
+AXE=axe_source()
+R=[]
+def ok(n,c,d=''): R.append(c); print('PASS' if c else 'FAIL',n,d)
+async def main():
+    async with async_playwright() as p:
+        b=await p.chromium.launch()
+        for w,h in [(375,740),(768,1024),(1180,820),(1440,900)]:
+            pg=await b.new_page(viewport={'width':w,'height':h}); errs=[]
+            pg.on('pageerror',lambda e:errs.append(str(e)))
+            await pg.add_init_script("window.supabase={createClient(){throw new Error('offline')}}")
+            await pg.goto(URL); await pg.wait_for_timeout(900)
+            ok(f'{w} six empty spots',await pg.locator('.slot-add').count()==6)
+            await pg.locator('.slot-add').first.click(); await pg.wait_for_timeout(300)
+            ok(f'{w} picker opens',await pg.evaluate("!document.getElementById('flavor-picker-modal').classList.contains('pointer-events-none')"))
+            await pg.add_script_tag(content=AXE)
+            v=await pg.evaluate("axe.run(document,{runOnly:['wcag2a','wcag2aa','wcag21aa','best-practice']}).then(r=>r.violations.map(x=>x.id+':'+x.nodes.length))")
+            ok(f'{w} axe (picker open)',v==[],v)
+            await pg.locator('.picker-card').nth(0).click(); await pg.locator('.picker-card').nth(0).click(); await pg.locator('.picker-card').nth(1).click()
+            ok(f'{w} picks stay open + counted',await pg.evaluate("customBox.length")==3 and '3 / 6' in await pg.inner_text('#picker-count'))
+            await pg.keyboard.press('Escape'); await pg.wait_for_timeout(350)
+            ok(f'{w} Esc closes',await pg.evaluate("document.getElementById('flavor-picker-modal').classList.contains('pointer-events-none')"))
+            ok(f'{w} 3 spots left',await pg.locator('.slot-add').count()==3)
+            await pg.locator('.slot-add').first.click(); await pg.wait_for_timeout(200)
+            for i in range(3): await pg.locator('.picker-card').nth(2).click()
+            await pg.wait_for_timeout(400)
+            ok(f'{w} auto-closes at 6',await pg.evaluate("customBox.length==6 && document.getElementById('flavor-picker-modal').classList.contains('pointer-events-none')"))
+            ok(f'{w} pre-order enabled',not await pg.evaluate("document.getElementById('add-box-btn').disabled"))
+            await pg.click('[aria-label^="Remove"]'); await pg.wait_for_timeout(200)
+            ok(f'{w} tap cookie removes',await pg.evaluate("customBox.length")==5)
+            await pg.locator('.slot-add').first.click(); await pg.locator('.picker-card').nth(0).click(); await pg.wait_for_timeout(300)
+            await pg.click('#add-box-btn'); await pg.wait_for_timeout(300)
+            ok(f'{w} box in bag',await pg.evaluate("cart.length")==1)
+            await pg.evaluate("toggleCartDrawer(false)")
+            v=await pg.evaluate("axe.run(document,{runOnly:['wcag2a','wcag2aa','wcag21aa','best-practice']}).then(r=>r.violations.map(x=>x.id+':'+x.nodes.length))")
+            ok(f'{w} axe (box page)',v==[],v)
+            await pg.locator('#shop-steps .shop-step').nth(1).click(); await pg.wait_for_timeout(500)
+            v=await pg.evaluate("axe.run(document,{runOnly:['wcag2a','wcag2aa','wcag21aa','best-practice']}).then(r=>r.violations.map(x=>x.id+':'+x.nodes.length))")
+            ok(f'{w} axe (drinks page)',v==[],v)
+            ok(f'{w} no sideways scroll',await pg.evaluate("document.documentElement.scrollWidth<=innerWidth"))
+            ok(f'{w} no page errors',errs==[],errs)
+            await pg.close()
+        await b.close()
+    print('RESULT',sum(R),'/',len(R))
+asyncio.run(main())
