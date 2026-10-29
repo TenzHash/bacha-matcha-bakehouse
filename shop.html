@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bacha Matcha &amp; Bakehouse | Verified Pre-Orders</title>
+  <meta name="description" content="Pre-order freshly baked custom boxes of 6 cookies, matcha drinks and pastries from Bacha Matcha &amp; Bakehouse. Weekly bake drops, GCash or cash on delivery." />
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'none'" />
+  <meta name="theme-color" content="#7E9F76" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Bacha Matcha &amp; Bakehouse | Weekly Cookie Box Pre-Orders" />
+  <meta property="og:description" content="Build your own box of 6 cookies, add matcha drinks and pastries. Fresh weekly bake drops." />
+  
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  
+  <!-- Styles: tailwind.css is pre-built (see build/README.txt); app.css is hand-written -->
+  <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/coupon.css"><!-- Part 9B: coupon box -->
+  <!-- Libraries are bundled in vendor/ so the app also opens without internet -->
+  <script src="vendor/lucide.min.js"></script>
+  <script src="vendor/supabase.js"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-gingham text-bacha-text font-body min-h-screen flex flex-col selection:bg-bacha-berry selection:text-white relative">
+
+  <a href="#store-view" id="skip-link" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[110] focus:px-4 focus:py-2 focus:rounded-xl focus:bg-white focus:text-bacha-matchaDark focus:font-bold focus:shadow-lg">Skip to main content</a>
+
+  <!-- 0. BRANDED PRELOADER -->
+  <div id="bacha-preloader" role="status" aria-live="polite" aria-label="Loading Bacha" class="fixed inset-0 z-[100] bg-gingham flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="flex flex-col items-center space-y-4 text-center px-4">
+      <div class="relative">
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-[3px] border-bacha-strawberry/40 soft-shadow flex items-center justify-center loading-bake-pulse overflow-hidden p-2">
+          <img 
+            src="images/bacha_logo.jpg" 
+            alt="Bacha Logo" 
+            class="w-full h-full object-cover rounded-full"
+            onerror="this.onerror=null; this.parentElement.innerHTML='🍵';" 
+          />
+        </div>
+        <span class="absolute -top-1 -right-1 text-xl animate-bounce">✨</span>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-baseline justify-center gap-1.5">
+          <span class="font-cute font-bold text-3xl sm:text-4xl text-bacha-matcha tracking-wide">BACHA</span>
+          <span class="text-[12px] sm:text-[12px] tracking-widest text-bacha-berry font-bold uppercase">Matcha &amp; Bakehouse</span>
+        </div>
+        <p class="text-[13px] sm:text-sm font-cute text-bacha-text/75">Preheating the oven &amp; loading fresh dough...</p>
+      </div>
+
+      <div class="w-40 sm:w-48 bg-white/80 h-2 rounded-full border border-bacha-gingham overflow-hidden p-0.5 shadow-inner">
+        <div id="preloader-bar" class="h-full bg-gradient-to-r from-bacha-strawberry to-bacha-matcha rounded-full transition-all duration-700 w-1/4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="shrink-0 z-40 bg-white/95 backdrop-blur-md border-b border-bacha-gingham sticky top-0">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-2 cursor-pointer shrink-0 min-h-[44px]" role="button" tabindex="0" aria-label="Bacha home" onclick="switchView('store')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchView('store')}">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bacha-matchaLight flex items-center justify-center shadow-inner overflow-hidden border border-bacha-gingham">
+          <img 
+            src="images/bacha_logo.jpg" 
+            alt="Bacha Logo" 
+            class="w-full h-full object-cover"
+            onerror="this.onerror=null; this.parentElement.innerHTML='🍵';" 
+          />
+        </div>
+        <div class="flex items-baseline gap-1 max-[359px]:hidden">
+          <span class="font-cute font-bold text-xl sm:text-2xl text-bacha-matcha tracking-wide leading-none">BACHA</span>
+          <span class="text-[12px] tracking-widest text-bacha-berry font-bold uppercase hidden lg:inline">Matcha &amp; Bakehouse</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+        <div id="admin-live-indicator" class="items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-[12px] font-cute font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Live</span>
+        </div>
+
+        <button id="nav-store-btn" onclick="switchView('store')" class="px-2.5 sm:px-3.5 py-1.5 rounded-full font-cute font-semibold text-[13px] sm:text-sm transition bg-bacha-matcha text-white shadow-sm">
+          <span class="sm:hidden">Shop</span><span class="hidden sm:inline">Box Builder</span>
+        </button>
+        <!-- Hidden for customers; shown only after staff sign in (staff use the "Staff login" link in the footer) -->
+        <button id="nav-admin-btn" aria-label="Admin portal" onclick="openAdminAccess()" class="hidden flex px-2.5 sm:px-3.5 py-1.5 rounded-full font-cute font-semibold text-[13px] sm:text-sm transition bg-white text-bacha-text border border-bacha-gingham hover:bg-bacha-pinkLight items-center gap-1">
+          <i aria-hidden="true" data-lucide="shield-check" class="w-3.5 h-3.5 text-bacha-matcha"></i>
+          <span class="hidden sm:inline">Admin Portal</span>
+          <span class="sm:hidden">Admin</span>
+          <span id="header-lowstock-alert" class="hidden w-2 h-2 rounded-full bg-rose-600"></span>
+        </button>
+        <button onclick="toggleTrackModal(true)" aria-label="My Order" class="qty-btn px-2.5 sm:px-3 py-1.5 rounded-full font-cute font-semibold text-[13px] sm:text-sm bg-white text-bacha-text border border-bacha-gingham hover:bg-bacha-pinkLight transition flex items-center gap-1">
+          <i aria-hidden="true" data-lucide="receipt" class="w-4 h-4 text-bacha-berry"></i><span class="hidden sm:inline">My Order</span>
+        </button>
+        <button onclick="toggleCartDrawer(true)" aria-label="Open bag" class="qty-btn relative p-2 rounded-full bg-bacha-strawberry/15 hover:bg-bacha-strawberry/25 text-bacha-berry transition">
+          <i aria-hidden="true" data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span id="cart-counter" class="absolute -top-1 -right-1 bg-bacha-berry text-white text-[12px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Section jump bar (Full Menu mode only) -->
+  <div id="section-nav" role="navigation" aria-label="Menu sections" class="hidden sticky top-14 z-30 bg-white/95 backdrop-blur-sm border-b border-bacha-gingham">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex gap-2">
+      <button id="secnav-box" onclick="jumpTo('box')" class="flex-1 sm:flex-none px-4 py-2 rounded-full font-cute font-bold text-[13px] sm:text-sm border transition">🍪 Box of 6</button>
+      <button id="secnav-single" onclick="jumpTo('single')" class="flex-1 sm:flex-none px-4 py-2 rounded-full font-cute font-bold text-[13px] sm:text-sm border transition">🍵 Drinks &amp; Ala-Carte</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER SIDE: MOBILE & DESKTOP STORE VIEW                             -->
+  <!-- ========================================================================= -->
+  <main id="store-view" tabindex="-1" class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 w-full flex flex-col min-h-0 relative">
+    
+    <!-- Shop Closed Overlay Screen -->
+    <div id="shop-closed-overlay" class="hidden absolute inset-0 z-30 bg-white/95 backdrop-blur-md rounded-3xl m-2 border-2 border-dashed border-bacha-strawberry/50 flex flex-col items-center justify-start pt-20 sm:pt-28 p-6 text-center soft-shadow space-y-4">
+      <div id="closed-screen-icon" class="w-16 h-16 rounded-full bg-bacha-pinkLight border border-bacha-gingham flex items-center justify-center text-4xl shadow-inner">
+        🌙
+      </div>
+      <div class="max-w-md space-y-1.5">
+        <span id="closed-screen-badge" class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-700 font-cute text-sm font-bold">
+          Oven Resting • Currently Closed
+        </span>
+        <h2 id="closed-screen-title" class="font-cute font-bold text-2xl sm:text-4xl text-bacha-berry leading-tight">
+          Pre-Orders are Closed for This Batch
+        </h2>
+        <p id="closed-screen-msg" class="text-sm text-bacha-text/80 font-medium leading-relaxed">
+          Our ovens are currently preparing the current batch of freshly baked cookies. Please check back next week for our upcoming bake drop!
+        </p>
+      </div>
+      <div class="p-3 rounded-2xl bg-bacha-pinkLight/60 border border-bacha-gingham flex items-center gap-2">
+        <span class="text-lg">🍵</span>
+        <span class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-matchaDark">Follow our socials for live batch announcements ♡</span>
+      </div>
+      <div id="closed-socials" class="flex flex-wrap items-center justify-center gap-2 max-w-md"></div>
+    </div>
+
+    <div id="cutoff-banner" class="hidden mb-2 px-3 py-1.5 rounded-xl bg-bacha-pinkLight/80 border border-bacha-gingham text-center">
+      <div class="md:flex md:items-center md:justify-center md:gap-3 md:flex-wrap">
+        <p id="cutoff-banner-text" class="font-cute font-bold text-[13px] sm:text-sm text-bacha-berry"></p>
+        <p id="cutoff-banner-time" class="text-[12px] sm:text-[13px] font-bold text-bacha-text/80"></p>
+      </div>
+    </div>
+
+    <!-- Responsive Grid: Flex column on Mobile, 12-col layout on Large Desktop -->
+    <div id="box-mode-wrap" class="scroll-mt-28 lg:h-[calc(100vh-180px)] lg:min-h-[640px]">
+    <div class="flex flex-col lg:grid lg:grid-cols-12 gap-3.5 sm:gap-5 h-full min-h-0">
+      
+      <!-- TOP/RIGHT ON MOBILE: 3D Card Carousel Selection (Order 1 on mobile, Order 2 on desktop) -->
+      <section class="order-1 lg:order-2 lg:col-span-7 bg-white/95 rounded-2xl p-3 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow flex flex-col justify-between h-[480px] sm:h-[510px] lg:h-full min-h-0 overflow-hidden relative">
+        
+        <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-bacha-gingham">
+          <div>
+            <h2 class="font-cute font-bold text-lg sm:text-2xl text-bacha-berry leading-tight">Pick Flavors</h2>
+            <p class="text-[12px] sm:text-[13px] text-bacha-text/75 leading-none mt-0.5">Use side arrows or swipe to choose 6 cookies.</p>
+          </div>
+          <span id="carousel-page-indicator" class="font-cute text-[13px] sm:text-sm font-bold text-bacha-matcha bg-bacha-matchaLight/80 px-2 sm:px-2.5 py-0.5 rounded-full">
+            1 / 8
+          </span>
+        </div>
+
+        <!-- 3D Carousel Viewport -->
+        <div role="region" aria-roledescription="carousel" aria-label="Cookie flavors (use left and right arrow keys)" tabindex="0" onkeydown="carouselKey(event)" class="carousel-3d-scene flex-1 min-h-[360px] relative select-none overflow-hidden my-1">
+          <button onclick="prevCarouselSlide()" aria-label="Previous flavor" class="no-tap hit absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/95 backdrop-blur-sm border-2 border-bacha-strawberry/40 hover:border-bacha-strawberry text-bacha-berry hover:bg-bacha-berry hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95">
+            <i aria-hidden="true" data-lucide="chevron-left" class="w-4 h-4 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+          </button>
+
+          <div id="carousel-track" class="carousel-3d-container"></div>
+
+          <button onclick="nextCarouselSlide()" aria-label="Next flavor" class="no-tap hit absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-40 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/95 backdrop-blur-sm border-2 border-bacha-strawberry/40 hover:border-bacha-strawberry text-bacha-berry hover:bg-bacha-berry hover:text-white flex items-center justify-center transition-all duration-200 shadow-md active:scale-95">
+            <i aria-hidden="true" data-lucide="chevron-right" class="w-4 h-4 sm:w-6 sm:h-6 stroke-[2.5]"></i>
+          </button>
+        </div>
+
+        <div class="shrink-0 flex justify-center items-center gap-1.5 pt-1 border-t border-bacha-pinkLight" id="carousel-dots-container"></div>
+      </section>
+
+      <!-- BOTTOM/LEFT ON MOBILE: Box Builder & Slots (Order 2 on mobile, Order 1 on desktop) -->
+      <section id="box-builder-panel" class="scroll-mt-28 order-2 lg:order-1 lg:col-span-5 bg-white/95 rounded-2xl p-3.5 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow flex flex-col justify-between min-h-[380px] lg:h-full">
+        
+        <div class="shrink-0 mb-2 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-bacha-pinkLight border border-bacha-gingham text-bacha-berry font-cute text-[12px] sm:text-[12px]">
+              <span>🌸</span> <span id="batch-pill-text">1 Batch Per Week Pre-Order</span>
+            </div>
+            <span id="box-slot-indicator" class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-matcha px-2 py-0.5 rounded-full bg-bacha-matchaLight">
+              0 / 6 Selected
+            </span>
+          </div>
+
+          <div class="bg-bacha-pinkLight/60 border border-bacha-gingham/80 p-1.5 sm:p-2 rounded-xl flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5 min-w-0 w-full">
+              <i aria-hidden="true" data-lucide="calendar" class="w-3.5 h-3.5 text-bacha-berry shrink-0"></i>
+              <span class="text-[12px] sm:text-[12px] font-cute font-bold text-bacha-text shrink-0">Bake Date:</span>
+              <select id="customer-preorder-date" onchange="updateSelectedBatchDate(this.value)" class="bg-white border border-bacha-gingham text-bacha-matcha font-cute font-bold text-[12px] sm:text-[13px] rounded-lg px-2 py-1 focus:outline-none focus:border-bacha-strawberry truncate w-full cursor-pointer">
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <h1 class="font-cute font-bold text-2xl sm:text-3xl lg:text-4xl text-bacha-berry tracking-wide leading-none">
+              CUSTOM BOX OF 6
+            </h1>
+            <p class="text-bacha-matcha font-cute text-[12px] sm:text-sm mt-0.5 font-semibold">
+              Freshly baked straight from our weekly oven batch ♡
+            </p>
+          </div>
+        </div>
+
+        <!-- 2x3 Pastry Box (Scales neatly on phones) -->
+        <div class="flex-1 min-h-[220px] bg-bacha-pinkLight/85 rounded-2xl p-2 sm:p-3 border-2 border-dashed border-bacha-strawberry/50 shadow-inner flex flex-col justify-center">
+          <div class="grid grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-2 xl:grid-cols-2 xl:grid-rows-3 gap-2 sm:gap-3.5 h-full w-full place-items-center" id="box-slots-container"></div>
+        </div>
+
+        <!-- Subtotal & Pre-Order Button -->
+        <div class="shrink-0 w-full mt-2 pt-2 border-t border-bacha-gingham flex items-center justify-between">
+          <div>
+            <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium leading-none">Box Subtotal</p>
+            <p id="box-total-price" class="font-cute font-bold text-xl sm:text-2xl text-bacha-matcha leading-tight mt-0.5">₱0</p>
+          </div>
+          <div class="flex gap-1.5">
+            <button onclick="clearBox()" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-[13px] sm:text-sm font-cute font-semibold border border-bacha-gingham hover:bg-bacha-pinkLight text-bacha-text/75 transition">
+              Clear
+            </button>
+            <button id="add-box-btn" onclick="addCustomBoxToCart()" disabled class="px-3.5 sm:px-4 py-1.5 rounded-xl text-[13px] sm:text-sm font-cute font-bold bg-gray-200 text-gray-600 cursor-not-allowed transition shadow-sm">
+              + Pre-Order Box
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+    </div>
+
+    <!-- SINGLE ORDERS / ALA-CARTE & DRINKS -->
+    <section id="single-menu-section" class="scroll-mt-28 hidden mt-4 bg-white/95 rounded-2xl p-3 sm:p-4 border-2 border-bacha-strawberry/35 soft-shadow space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bacha-gingham pb-2">
+        <div>
+          <h2 class="font-cute font-bold text-xl sm:text-3xl text-bacha-berry leading-tight">Ala-Carte &amp; Drinks</h2>
+          <p class="text-[12px] sm:text-sm text-bacha-text/75">Order cookies, drinks and pastries individually.</p>
+          <p id="single-limit-note" class="text-[12px] font-bold text-amber-700 mt-0.5"></p>
+        </div>
+        <div id="single-filter-pills" class="flex gap-1.5 overflow-x-auto no-scrollbar"></div>
+      </div>
+      <div id="single-menu-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3"></div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ADMIN SIDE: FULLY RESPONSIVE DASHBOARD                                 -->
+  <!-- ========================================================================= -->
+  <main id="admin-view" tabindex="-1" class="hidden flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 pb-24 lg:pb-4 w-full">
+    
+    <div class="admin-layout">
+      <div id="admin-scrim" class="admin-scrim" onclick="toggleAdminNav(false)"></div>
+
+      <aside id="admin-sidebar" class="admin-sidebar" aria-label="Admin menu">
+        <div class="admin-side-head">
+          <p class="admin-side-title font-cute font-bold text-bacha-matchaDark">Control hub</p>
+          <p>Orders, stock, menu and cash.</p>
+        </div>
+        <nav class="admin-nav" role="tablist">
+        <button id="tab-today-btn" onclick="switchAdminTab('today')" class="admin-tab is-active">
+          <i aria-hidden="true" data-lucide="layout-dashboard" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Today</span>
+        </button>
+        <button id="tab-inventory-btn" onclick="switchAdminTab('inventory')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="package" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Inventory</span>
+        </button>
+        <button id="tab-orders-btn" onclick="switchAdminTab('orders')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="clipboard-list" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Orders</span><span id="orders-badge-count" class="admin-badge">0</span>
+        </button>
+        <button id="tab-pos-btn" onclick="switchAdminTab('pos')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="calculator" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">POS</span>
+        </button>
+        <button id="tab-cash-btn" onclick="switchAdminTab('cash')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="wallet" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Cash</span>
+        </button>
+        <button id="tab-customize-btn" onclick="switchAdminTab('customize')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="sparkles" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Menu edit</span>
+        </button>
+        <button id="tab-deadline-btn" onclick="switchAdminTab('deadline')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="clock" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Store control</span>
+        </button>
+        <button id="tab-records-btn" onclick="switchAdminTab('records')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="archive" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">Records</span>
+        </button>
+        <button id="tab-settings-btn" onclick="switchAdminTab('settings')" class="admin-tab">
+          <i aria-hidden="true" data-lucide="key-round" class="w-[18px] h-[18px] shrink-0"></i><span class="admin-tab-label">PIN</span>
+        </button>
+        </nav>
+        <button onclick="adminLogout()" class="admin-exit font-cute">
+          <i aria-hidden="true" data-lucide="log-out" class="w-4 h-4"></i><span>Exit admin</span>
+        </button>
+      </aside>
+
+      <div class="admin-content">
+        <div class="admin-topbar">
+          <button id="admin-menu-btn" class="admin-menu-btn font-cute" onclick="toggleAdminNav(true)" aria-controls="admin-sidebar" aria-expanded="false">
+            <i aria-hidden="true" data-lucide="menu" class="w-5 h-5"></i><span>Menu</span>
+          </button>
+          <h1 id="admin-tab-title" class="font-cute font-bold text-bacha-matchaDark">Today</h1>
+        </div>
+
+    <!-- TAB 0: TODAY -->
+    <div id="admin-today-tab" class="space-y-4"></div>
+
+    <!-- TAB 1: INVENTORY -->
+    <div id="admin-inventory-tab" class="hidden space-y-4">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+        <div class="bg-white p-3 rounded-2xl border border-bacha-gingham shadow-sm">
+          <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium">Weekly Total Stock</p>
+          <p id="metric-total-stock" class="font-cute font-bold text-2xl sm:text-3xl text-bacha-matcha mt-0.5">0 pcs</p>
+          <span class="text-[12px] text-bacha-text/75">Across Flavor Trays</span>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-bacha-gingham shadow-sm">
+          <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium">Max Box Capacity</p>
+          <p id="metric-boxes-capacity" class="font-cute font-bold text-2xl sm:text-3xl text-bacha-berry mt-0.5">~0 Boxes</p>
+          <span class="text-[12px] text-bacha-text/75">Weekly bake quota</span>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-bacha-gingham shadow-sm">
+          <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium">Low Stock Trays</p>
+          <p id="metric-low-stock" class="font-cute font-bold text-2xl sm:text-3xl text-amber-700 mt-0.5">0</p>
+          <span class="text-[12px] text-amber-800 font-semibold">&le; 5 left in oven</span>
+        </div>
+        <div class="bg-white p-3 rounded-2xl border border-bacha-gingham shadow-sm flex flex-col justify-between">
+          <p class="text-[12px] sm:text-[12px] text-bacha-text/75 font-medium">Batch Restock</p>
+          <button onclick="restockAllOvens(12)" class="w-full mt-1 py-1.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-[12px] sm:text-[13px] transition shadow-sm">
+            +12 to All Active
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-bacha-gingham soft-shadow">
+        <div class="flex justify-between items-center mb-3">
+          <div>
+            <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry">Live Flavor Stock Controls</h2>
+            <p class="text-[12px] sm:text-[13px] text-bacha-text/75">Updates propagate to customers in real time.</p>
+          </div>
+          <button onclick="resetDefaultInventory()" class="px-2 py-1.5 text-[12px] sm:text-[13px] font-cute font-bold text-rose-700 hover:underline">
+            Refill to Capacity
+          </button>
+        </div>
+
+        <div id="inventory-table-body" class="inv-grid"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ORDERS QUEUE -->
+    <div id="admin-orders-tab" class="hidden space-y-3">
+      <div class="flex flex-wrap items-end gap-2 bg-white p-2.5 rounded-2xl border border-bacha-gingham">
+        <div><label class="block text-[12px] font-bold text-bacha-text/75">From</label><input type="date" id="export-from" class="px-2 py-1 rounded-lg border border-bacha-gingham text-sm" /></div>
+        <div><label class="block text-[12px] font-bold text-bacha-text/75">To</label><input type="date" id="export-to" class="px-2 py-1 rounded-lg border border-bacha-gingham text-sm" /></div>
+        <button onclick="exportOrdersCSV()" class="px-3 py-1.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-[13px]">⬇ Export Sales (CSV)</button>
+        <label class="flex items-center gap-1.5 text-[12px] font-bold text-bacha-text/80 pb-1.5 cursor-pointer"><input type="checkbox" id="export-all" class="w-4 h-4 accent-[#4F6E48]" /> Include pending &amp; cancelled</label>
+      </div>
+      <details id="bake-panel" class="bg-white rounded-2xl border border-bacha-gingham">
+        <summary class="cursor-pointer select-none px-3 py-2.5 font-cute font-bold text-sm text-bacha-berry min-h-[44px] flex items-center">🧁 Bake list by batch (what to bake)</summary>
+        <div class="px-3 pb-3 space-y-2">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+            <select id="bake-batch" aria-label="Batch" onchange="renderBakeList()" class="flex-1 min-w-0 px-2.5 py-2 rounded-xl border border-bacha-gingham bg-white text-sm font-cute font-bold"></select>
+            <label class="flex items-center gap-1.5 text-[12px] font-bold text-bacha-text/80 cursor-pointer"><input type="checkbox" id="bake-include-pending" onchange="renderBakeList()" class="w-4 h-4 accent-[#4F6E48]" /> Include unverified</label>
+            <button onclick="copyBakeList()" class="px-3 py-2 rounded-xl bg-white border border-bacha-matcha text-bacha-matchaDark font-cute font-bold text-[13px]">📋 Copy list</button>
+          </div>
+          <div id="bake-list-body"></div>
+        </div>
+      </details>
+      <div class="orders-toolbar">
+        <input type="search" id="orders-search" placeholder="Search order ID, name or number" oninput="setOrdersSearch(this.value)" class="px-3 py-2 rounded-xl border border-bacha-gingham bg-white text-sm focus:outline-none focus:border-bacha-strawberry" />
+        <button id="alerts-btn" type="button" onclick="toggleAlerts()" aria-pressed="false" class="shrink-0 px-3 py-2 rounded-full font-cute font-bold text-[13px] border border-bacha-gingham bg-white text-bacha-text whitespace-nowrap">🔕 Alerts off</button>
+        <button id="dmap-open-btn" type="button" onclick="openDeliveryMap()" class="shrink-0 px-3 py-2 rounded-full font-cute font-bold text-[13px] border border-bacha-gingham bg-white text-bacha-text whitespace-nowrap">🗺️ Delivery map</button>
+        <div id="orders-filter-pills" class="flex gap-1.5 overflow-x-auto no-scrollbar"></div>
+      </div>
+      <div class="grid gap-3" id="admin-orders-list"></div>
+      <div id="orders-more" class="text-center"></div>
+    </div>
+
+    <!-- TAB: IN-STORE CASHIER POS -->
+    <div id="admin-pos-tab" class="hidden">
+      <div class="grid md:grid-cols-12 gap-3">
+        <section class="min-w-0 md:col-span-7 lg:col-span-8 bg-white rounded-2xl p-3 sm:p-4 border border-bacha-gingham soft-shadow space-y-2.5">
+          <div class="flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry leading-none">Counter Register</h2>
+              <p class="text-[12px] sm:text-sm text-bacha-text/75 mt-0.5">Tap an item to add it to the ticket.</p>
+            </div>
+            <div class="text-right space-y-1 shrink-0">
+              <div id="pos-today-summary" class="text-right text-[12px] font-cute font-bold text-bacha-matchaDark bg-bacha-matchaLight/70 px-2.5 py-1 rounded-xl"></div>
+              <div class="flex flex-wrap justify-end gap-x-3"><button onclick="showLastReceipt()" class="qty-btn text-[12px] font-bold text-bacha-berry underline px-2 py-2">Last receipt</button><button onclick="showDayReport()" class="qty-btn text-[12px] font-bold text-bacha-berry underline px-2 py-2">End-of-day report</button></div>
+            </div>
+          </div>
+          <div id="pos-filter-pills" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+          <div id="pos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 max-h-[55vh] md:max-h-[62vh] overflow-y-auto aesthetic-scroll pr-0.5"></div>
+        </section>
+
+        <section id="pos-ticket-panel" class="min-w-0 scroll-mt-20 md:col-span-5 lg:col-span-4 bg-white rounded-2xl p-3 sm:p-4 border-2 border-bacha-strawberry/30 soft-shadow flex flex-col gap-2.5 md:sticky md:top-16 self-start w-full">
+          <div class="flex items-center justify-between">
+            <h3 class="font-cute font-bold text-base text-bacha-text">Current Ticket</h3>
+            <button onclick="posClear()" class="qty-btn px-2 py-1.5 text-[12px] font-bold text-rose-700 hover:text-rose-700">Clear</button>
+          </div>
+          <input type="text" id="pos-customer" placeholder="Customer name (optional)" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+          <div id="pos-ticket" class="space-y-1.5 max-h-[30vh] overflow-y-auto aesthetic-scroll"></div>
+
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="pos-pay-cash" onclick="setPosPayment('Cash Walk-in')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">💵 Cash</button>
+            <button id="pos-pay-gcash" onclick="setPosPayment('GCash Counter')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">📱 GCash</button>
+          </div>
+          <div id="pos-cash-wrap" class="grid grid-cols-2 gap-2 items-end">
+            <div>
+              <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Cash Received (₱)</label>
+              <input type="number" id="pos-cash-input" oninput="updatePosTotals()" placeholder="0" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold focus:outline-none focus:border-bacha-strawberry" />
+            </div>
+            <div class="text-right">
+              <p class="text-[12px] font-bold text-bacha-text/75">Change</p>
+              <p id="pos-change" class="font-cute font-bold text-lg text-bacha-matcha">₱0</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-bacha-gingham">
+            <span class="font-cute font-bold text-base">Total</span>
+            <span id="pos-total" class="font-cute font-bold text-3xl text-bacha-matcha">₱0</span>
+          </div>
+          <button id="pos-charge-btn" onclick="posCharge()" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-base tracking-wide transition shadow-sm">Charge</button>
+        </section>
+      </div>
+    </div>
+
+    <!-- TAB 3: PRODUCT CUSTOMIZATION -->
+    <div id="admin-customize-tab" class="hidden space-y-4">
+      <div class="bg-white rounded-3xl p-4 sm:p-6 border border-bacha-gingham soft-shadow space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-bacha-gingham pb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full bg-bacha-pinkLight border border-bacha-gingham flex items-center justify-center text-xl">✨</div>
+            <div>
+              <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry leading-none">Product Customization &amp; Menu Manager</h2>
+              <p class="text-[12px] sm:text-sm text-bacha-text/75 mt-0.5">Add new flavors, delete items, toggle availability, edit prices, and set promos.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openAddProductModal()" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-bacha-berry hover:bg-bacha-berryDark text-white font-cute font-bold text-[13px] sm:text-sm tracking-wide transition shadow-sm flex items-center gap-1.5">
+              <i aria-hidden="true" data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              <span>+ Add Item</span>
+            </button>
+            <button onclick="saveAllProductCustomizations()" class="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-[13px] sm:text-sm tracking-wide transition shadow-sm flex items-center gap-1.5">
+              <i aria-hidden="true" data-lucide="save" class="w-3.5 h-3.5"></i>
+              <span>Save Menu</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="category-manager" class="p-3.5 rounded-2xl bg-bacha-matchaLight/50 border border-bacha-gingham space-y-2"></div>
+        <div class="grid sm:grid-cols-2 gap-3 sm:gap-4" id="customization-cards-grid"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: DEADLINE, STORE ON/OFF & DAY-OFF CONTROLS -->
+    <div id="admin-deadline-tab" class="hidden max-w-xl md:max-w-5xl mx-auto space-y-4">
+      <div class="bg-white rounded-3xl p-5 sm:p-7 border-2 border-bacha-strawberry/35 soft-shadow space-y-4 sm:space-y-5">
+        <div class="flex items-center gap-3 border-b border-bacha-gingham pb-3">
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-bacha-pinkLight border border-bacha-gingham flex items-center justify-center text-2xl shadow-inner">🏪</div>
+          <div>
+            <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry leading-none">Store Status &amp; Drop Control</h2>
+            <p class="text-[12px] sm:text-sm text-bacha-text/75 mt-0.5">Toggle live storefront availability, set baker's day off, and configure deadlines.</p>
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-2 md:gap-5 md:items-start space-y-4 sm:space-y-5 md:space-y-0">
+        <div class="space-y-4 sm:space-y-5">
+        <!-- Storefront Display Mode -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-bacha-matchaLight/50 border border-bacha-gingham space-y-2">
+          <div>
+            <span class="text-[12px] font-bold text-bacha-text/75 uppercase">Storefront Display Mode</span>
+            <p class="text-[12px] text-bacha-text/75">Choose what customers can order on the storefront.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+            <button onclick="setDisplayMode('box')" id="btn-disp-box" class="py-2 px-2 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border">📦 Box of 6 Only</button>
+            <button onclick="setDisplayMode('singles')" id="btn-disp-singles" class="py-2 px-2 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border">🍵 Single / Ala-Carte &amp; Drinks</button>
+            <button onclick="setDisplayMode('both')" id="btn-disp-both" class="py-2 px-2 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border">✨ Full Menu (Both)</button>
+          </div>
+        </div>
+
+        <!-- Order limits & settings -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white border border-bacha-gingham space-y-2.5">
+          <span class="text-[12px] font-bold text-bacha-text/75 uppercase">Order Limits &amp; Settings</span>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Max boxes per order</label><input type="number" min="0" id="cfg-max-boxes" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold" /></div>
+            <div><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Max drinks per order</label><input type="number" min="0" id="cfg-max-drinks" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold" /></div>
+            <div><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Daily drink limit (0 = none)</label><input type="number" min="0" id="cfg-daily-drinks" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold" /></div>
+            <div><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Low-stock alert at</label><input type="number" min="1" id="cfg-low-stock" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold" /></div>
+          </div>
+          <div><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Instagram username (shows a "Message us" button)</label><input type="text" id="cfg-ig" placeholder="e.g. bacha.bakehouse" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm" /></div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="col-span-2"><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Delivery area (shown to customers, leave blank for none)</label><input type="text" id="cfg-delivery-area" placeholder="e.g. Within Legazpi City only" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm" /></div>
+            <div class="col-span-2"><label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Free delivery from this order total (₱, 0 = always free)</label><input type="number" min="0" id="cfg-free-min" class="w-full px-2.5 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold" /></div>
+          </div>
+          <p class="text-[12px] text-bacha-text/75">Use 0 to turn a limit off. The store also closes automatically when everything is sold out.</p>
+          <button onclick="saveAppConfig()" class="w-full py-2 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm">Save Settings</button>
+        </div>
+
+        </div>
+        <div class="space-y-4 sm:space-y-5">
+        <!-- 3-Way Store Mode Switch (Open / Batch Closed / Baker's Day Off) -->
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-bacha-pinkLight/70 border border-bacha-gingham space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[12px] font-bold text-bacha-text/75 uppercase">Current Store Mode:</span>
+            <span id="store-status-badge" class="px-2.5 py-0.5 rounded-full text-[12px] font-cute font-bold bg-emerald-100 text-emerald-800">
+              Online &amp; Open
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5 pt-1">
+            <button onclick="setStoreMode('open')" id="btn-mode-open" class="py-2 px-1 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border border-bacha-gingham bg-bacha-matcha text-white transition shadow-sm">
+              🟢 Normal Open
+            </button>
+            <button onclick="setStoreMode('batch_closed')" id="btn-mode-closed" class="py-2 px-1 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border border-bacha-gingham bg-white text-bacha-text hover:bg-bacha-pinkLight transition">
+              🌙 Batch Closed
+            </button>
+            <button onclick="setStoreMode('day_off')" id="btn-mode-dayoff" class="py-2 px-1 rounded-xl font-cute font-bold text-[12px] sm:text-[13px] border border-bacha-gingham bg-white text-bacha-text hover:bg-bacha-pinkLight transition">
+              🏖️ Baker's Day Off
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3 sm:p-3.5 rounded-2xl bg-white border border-bacha-gingham flex items-center justify-between">
+          <div class="space-y-0.5">
+            <span class="text-[12px] sm:text-[12px] font-bold text-bacha-text/75 uppercase">Scheduled Pre-Order Cut-Off:</span>
+            <p id="current-deadline-display" class="font-cute font-bold text-sm sm:text-base text-bacha-berry">Bake days: Friday · orders close 1 day before at 8:00 PM</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[12px] sm:text-[12px] font-cute font-bold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="deadline-pill-text">Batch Active</span>
+          </span>
+        </div>
+
+        <div class="space-y-3 text-left">
+          <fieldset>
+            <legend class="block text-[12px] font-bold text-bacha-text/75 mb-1">Bake days: tick every day you bake. Customers pick one of these dates.</legend>
+            <div class="flex flex-wrap gap-1.5">
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="1" aria-label="Monday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Mon</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="2" aria-label="Tuesday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Tue</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="3" aria-label="Wednesday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Wed</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="4" aria-label="Thursday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Thu</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="5" aria-label="Friday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Fri</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="6" aria-label="Saturday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Sat</span></label>
+              <label class="cursor-pointer"><input type="checkbox" name="bakeday" value="0" aria-label="Sunday" class="peer sr-only" /><span class="inline-flex items-center justify-center min-w-[58px] min-h-[44px] px-3 rounded-xl border border-bacha-gingham bg-white font-cute font-bold text-sm text-bacha-text transition peer-checked:bg-bacha-matcha peer-checked:text-white peer-checked:border-bacha-matcha peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-bacha-matcha">Sun</span></label>
+            </div>
+          </fieldset>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+            <div>
+              <label for="deadline-before-input" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Orders close</label>
+              <select id="deadline-before-input" class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm font-cute font-bold text-bacha-text focus:outline-none focus:border-bacha-strawberry bg-white cursor-pointer">
+                <option value="0">On the bake day itself</option>
+                <option value="1">1 day before</option>
+                <option value="2">2 days before</option>
+                <option value="3">3 days before</option>
+                <option value="4">4 days before</option>
+                <option value="5">5 days before</option>
+                <option value="6">6 days before</option>
+              </select>
+            </div>
+            <div>
+              <label for="deadline-time-input" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">At this time</label>
+              <input type="time" id="deadline-time-input" value="20:00" class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm font-cute font-bold text-bacha-text focus:outline-none focus:border-bacha-strawberry bg-white" />
+            </div>
+            <div>
+              <label for="deadline-count-input" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Dates shown to customers</label>
+              <select id="deadline-count-input" class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm font-cute font-bold text-bacha-text focus:outline-none focus:border-bacha-strawberry bg-white cursor-pointer">
+                <option value="1">1 date</option>
+                <option value="2">2 dates</option>
+                <option value="3">3 dates</option>
+                <option value="4">4 dates</option>
+                <option value="5">5 dates</option>
+                <option value="6">6 dates</option>
+                <option value="7">7 dates</option>
+                <option value="8">8 dates</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="deadline-dispatch-input" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Pick-up / delivery note (leave blank for automatic)</label>
+            <input type="text" id="deadline-dispatch-input" class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" placeholder="e.g. Saturday Pickup from 1:00 PM" />
+          </div>
+
+          <div>
+            <label for="deadline-banner-input" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Customer banner (leave blank for automatic)</label>
+            <input type="text" id="deadline-banner-input" class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+          </div>
+
+          <div>
+            <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Custom Baker's Day Off Message</label>
+            <input type="text" id="dayoff-message-input" value="Our bakers are taking a well-deserved resting break! Pre-orders will resume for the next weekly batch." class="w-full px-3 py-1.5 sm:py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+          </div>
+        </div>
+
+        <div class="pt-1">
+          <button onclick="saveDeadlineSettings()" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm flex items-center justify-center gap-1.5">
+            <i aria-hidden="true" data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+            <span>Save Settings</span>
+          </button>
+        </div>
+        </div>
+        </div>
+      </div>
+      <div id="site-options-card" class="bg-white rounded-3xl p-5 sm:p-7 border-2 border-bacha-strawberry/35 soft-shadow space-y-5 mt-4"></div>
+    </div>
+
+    <!-- TAB 5: SECURITY PIN SETTINGS -->
+    <!-- TAB: CASH DRAWER -->
+    <div id="admin-cash-tab" class="hidden max-w-5xl mx-auto space-y-4">
+      <div class="bg-white rounded-2xl border border-bacha-gingham p-4 flex flex-wrap items-end gap-3">
+        <div>
+          <label for="cash-day" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Day</label>
+          <input type="date" id="cash-day" onchange="renderCashTab()" class="px-3 py-2 rounded-xl border border-bacha-gingham bg-white text-sm" />
+        </div>
+        <p class="text-[13px] text-bacha-text/80 flex-1 min-w-[200px]">Opening cash + cash sales at the counter + cash in &minus; cash out &minus; refunds = what should be in the drawer. Count it at closing to see any difference.</p>
+      </div>
+      <div id="cash-body" class="grid gap-4 md:grid-cols-2"></div>
+    </div>
+
+    <!-- TAB: RECORDS (backup, cleanup, activity) -->
+    <div id="admin-records-tab" class="hidden max-w-5xl mx-auto space-y-4">
+      <div id="records-body" class="grid gap-4 md:grid-cols-2"></div>
+    </div>
+
+    <div id="admin-settings-tab" class="hidden max-w-md mx-auto bg-white rounded-3xl p-5 sm:p-7 border-2 border-bacha-strawberry/35 soft-shadow space-y-4">
+      <div class="flex items-center gap-3 border-b border-bacha-gingham pb-3">
+        <div class="w-10 h-10 rounded-full bg-bacha-pinkLight border border-bacha-gingham flex items-center justify-center text-xl">🔑</div>
+        <div>
+          <h2 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry leading-none">Security PIN Settings</h2>
+          <p class="text-[12px] sm:text-sm text-bacha-text/75 mt-0.5">Change administrative access passcode.</p>
+        </div>
+      </div>
+
+      <div class="space-y-2.5 text-left">
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Current Passcode</label>
+          <input type="password" id="current-pin-input" placeholder="Enter current PIN" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry tracking-widest font-mono" />
+        </div>
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">New Passcode</label>
+          <input type="password" id="new-pin-input" placeholder="Enter new PIN" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry tracking-widest font-mono" />
+        </div>
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Confirm New Passcode</label>
+          <input type="password" id="confirm-pin-input" placeholder="Re-enter new PIN" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry tracking-widest font-mono" />
+        </div>
+        <p id="pin-change-status" class="text-[12px] font-bold hidden text-center"></p>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="handlePinReset()" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm flex items-center justify-center gap-1.5">
+          <span>Update Security PIN</span>
+          <i aria-hidden="true" data-lucide="check" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ADD NEW PRODUCT MODAL WITH IMAGE UPLOAD -->
+  <div id="add-product-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
+    <div class="relative w-full max-w-md bg-white rounded-3xl p-5 sm:p-6 border-2 border-bacha-strawberry/35 soft-shadow space-y-3.5 dialog-pop max-h-[90vh] overflow-y-auto aesthetic-scroll">
+      <div class="flex justify-between items-center pb-2 border-b border-bacha-gingham">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🍪</span>
+          <h3 class="font-cute font-bold text-lg sm:text-xl text-bacha-berry">Add New Menu Item</h3>
+        </div>
+        <button onclick="toggleAddProductModal(false)" aria-label="Close" class="no-tap hit w-9 h-9 -m-1 rounded-full flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-100"><span aria-hidden="true">✕</span></button>
+      </div>
+
+      <div class="space-y-2.5 text-left text-sm">
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Flavor Name <span class="text-rose-700">*</span></label>
+          <input type="text" id="add-prod-name" placeholder="e.g. UBE WHITE CHIP" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry font-cute font-bold uppercase" />
+        </div>
+        
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Category <span class="text-rose-700">*</span></label>
+          <select id="add-prod-cat" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm font-bold focus:outline-none focus:border-bacha-strawberry bg-white"></select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Price (₱) <span class="text-rose-700">*</span></label>
+            <input type="number" id="add-prod-price" placeholder="65" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry font-bold text-bacha-matcha" />
+          </div>
+          <div>
+            <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Initial Oven / Prep Limit <span class="text-rose-700">*</span></label>
+            <input type="number" id="add-prod-max" value="30" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry font-bold" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Promo Badge Tag (Optional)</label>
+          <input type="text" id="add-prod-promo" placeholder="e.g. New Flavor, Bestseller" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry font-cute font-bold text-bacha-berry" />
+        </div>
+
+        <!-- Cookie Photo File Upload with Live Preview -->
+        <div class="p-2.5 sm:p-3 rounded-2xl bg-bacha-pinkLight/60 border border-bacha-gingham space-y-1.5">
+          <label class="block text-[12px] font-bold text-bacha-text/75">Upload Pastry Photo <span class="text-rose-700">*</span></label>
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white border border-bacha-strawberry/40 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+              <img id="add-prod-img-preview" src="images/classic.png" alt="Preview" class="w-full h-full object-cover" onerror="this.src='images/classic.png';" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <input type="file" id="add-prod-file" accept="image/*" onchange="previewNewProductImage(this)" class="w-full text-[12px] text-bacha-text file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[12px] file:font-bold file:bg-bacha-berry file:text-white hover:file:bg-bacha-berryDark cursor-pointer" />
+              <p class="text-[12px] text-bacha-text/75 mt-0.5">PNG or JPG recommended.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Flavor Description <span class="text-rose-700">*</span></label>
+          <input type="text" id="add-prod-desc" placeholder="e.g. rich ube halaya dough with white chocolate chunks" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+        </div>
+      </div>
+
+      <div class="pt-1">
+        <button id="add-prod-submit-btn" onclick="submitNewProduct()" class="w-full py-2.5 rounded-xl bg-bacha-berry hover:bg-bacha-berryDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm">
+          + Add Item to Menu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRE-ORDER BAG DRAWER -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white border-l border-bacha-gingham p-4 sm:p-5 flex flex-col justify-between transform translate-x-full transition-transform duration-300 pointer-events-auto" id="cart-panel">
+      <div class="overflow-y-auto pr-1 aesthetic-scroll">
+        <div class="flex items-center justify-between pb-3 border-b border-bacha-gingham">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🎀</span>
+            <div>
+              <h2 class="font-cute font-bold text-lg text-bacha-berry leading-none">Pre-Order Bag</h2>
+              <span class="text-[12px] text-bacha-text/75">Weekly Box of 6 Drop</span>
+            </div>
+          </div>
+          <button onclick="toggleCartDrawer(false)" aria-label="Close bag" class="no-tap hit p-2.5 rounded-full text-bacha-text/75 hover:text-bacha-text hover:bg-bacha-pinkLight">
+            <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="mt-3 space-y-2 max-h-[22vh] overflow-y-auto aesthetic-scroll" id="cart-items-container"></div>
+
+        <div class="mt-3 pt-2.5 border-t border-bacha-gingham space-y-2">
+          <p class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-berry uppercase tracking-wide">
+            1. Recipient Details <span class="text-rose-700">*</span>
+          </p>
+
+          <div>
+            <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">Recipient Full Name <span class="text-rose-700">*</span></label>
+            <input type="text" id="cust-name" autocomplete="name" placeholder="e.g. Maria Clara Santos" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" required />
+          </div>
+
+          <div>
+            <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">GCash / Mobile Number <span class="text-rose-700">*</span></label>
+            <input type="text" id="cust-contact" autocomplete="tel" inputmode="tel" placeholder="09XX XXX XXXX" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" required />
+          </div>
+
+          <p class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-berry uppercase tracking-wide pt-1">
+            2. Pick-up or Delivery <span class="text-rose-700">*</span>
+          </p>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button type="button" id="ful-pickup" onclick="setFulfillment('pickup')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">🛍️ Pick-up</button>
+            <button type="button" id="ful-delivery" onclick="setFulfillment('delivery')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">🛵 Delivery (Free)</button>
+          </div>
+          <p id="pickup-info" class="text-[12px] text-bacha-text/75 bg-bacha-pinkLight/60 p-2 rounded-lg border border-bacha-gingham">🌸 For pick-up, we'll message you via chat to coordinate the time and place.</p>
+          <div id="pickup-far-note" class="hidden text-[12px] font-bold text-rose-800 bg-rose-50 p-2 rounded-lg border border-rose-200 space-y-1"><p id="pickup-far-text"></p><button type="button" onclick="checkDeliveryLocation()" class="underline">Check my location again</button></div>
+          <p id="cash-pickup-info" class="hidden text-[12px] font-bold text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200">💵 Pay in cash when you pick up your order. Please prepare the exact amount.</p>
+          <div id="delivery-fields" class="hidden space-y-2">
+            <div id="delivery-loc-wrap" class="hidden space-y-1.5">
+              <button type="button" onclick="checkDeliveryLocation()" id="delivery-loc-btn" class="w-full py-2 rounded-xl font-cute font-bold text-[13px] border border-bacha-matcha text-bacha-matchaDark bg-bacha-matchaLight/60 hover:bg-bacha-matchaLight">📍 Use my location to check delivery</button>
+              <p id="delivery-km-note" role="status" class="hidden text-[12px] font-bold p-2 rounded-lg border"></p>
+            </div>
+            <div>
+              <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">Delivery Address / Landmarks <span class="text-rose-700">*</span></label>
+              <textarea id="cust-address" autocomplete="street-address" rows="2" placeholder="House no., street, barangay, landmark" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry"></textarea>
+            </div>
+            <div>
+              <label class="block text-[12px] sm:text-[12px] font-bold text-bacha-text/75 mb-0.5">Google Maps Pin Link <span class="text-rose-700">*</span></label>
+              <input type="text" id="cust-maps" placeholder="https://maps.app.goo.gl/..." class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+              <p class="text-[12px] text-bacha-text/75 mt-0.5">In Google Maps: tap your location pin → Share → Copy link.</p>
+            </div>
+            <p id="delivery-area-note" class="hidden text-[12px] font-bold text-bacha-text/80 bg-bacha-pinkLight/60 p-2 rounded-lg border border-bacha-gingham"></p>
+            <div id="area-ok-wrap" class="hidden"><label id="area-ok-label" class="flex items-start gap-2 text-[13px] font-bold text-bacha-text/80 cursor-pointer rounded-lg"><input type="checkbox" id="cust-area-ok" class="mt-0.5 w-5 h-5 accent-[#4F6E48] shrink-0" /><span>My address is inside the delivery area.</span></label></div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="pay-gcash" onclick="setPayMethod('GCash')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">📱 Pay via GCash</button>
+              <button type="button" id="pay-cod" onclick="setPayMethod('COD')" class="py-2 rounded-xl font-cute font-bold text-[13px] border">💵 Cash on Delivery</button>
+            </div>
+            <p id="cod-info" class="hidden text-[12px] font-bold text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200">💵 COD: please prepare the exact amount. No change available.</p>
+          </div>
+
+          <p class="text-[12px] sm:text-[13px] font-cute font-bold text-bacha-berry uppercase tracking-wide pt-1">
+            3. Preferred Time &amp; Notes <span class="text-rose-700">*</span>
+          </p>
+          <input type="text" id="cust-note" placeholder="e.g. Friday 2:00 PM" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" required />
+
+          <div id="coupon-box" class="cpn-box hidden">
+            <p class="cpn-title"><span aria-hidden="true">🎟️</span> Have a coupon?</p>
+            <div class="cpn-row">
+              <input type="text" id="cust-coupon" placeholder="BACHA-XXXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" aria-label="Coupon code" class="w-full px-3 py-1.5 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+              <button type="button" id="coupon-apply-btn" onclick="applyOrRemoveCoupon()" class="cpn-btn">Apply</button>
+            </div>
+            <p id="coupon-msg" class="cpn-msg" role="status" aria-live="polite"></p>
+          </div>
+
+          <div id="gcash-section" class="space-y-2">
+          <p class="text-[12px] sm:text-[13px] font-cute font-bold text-blue-900 uppercase tracking-wide pt-1">
+            4. GCash Payment <span class="text-rose-700">*</span>
+          </p>
+
+          <div class="p-2.5 sm:p-3 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+            <div class="text-[12px] sm:text-[12px] text-blue-950 font-medium space-y-0.5 bg-white/95 p-2 rounded-lg border border-blue-100">
+              <div class="flex justify-between items-center mb-0.5">
+                <span class="font-bold text-blue-900">BACHA MATCHA BAKEHOUSE</span>
+                <span class="px-1.5 py-0.5 rounded bg-bacha-gcash text-white font-bold text-[12px]">GCash</span>
+              </div>
+              <p>Account Number: <strong class="text-blue-900 font-mono text-sm">0917 822 2428</strong></p>
+              <p class="text-rose-700 font-bold text-[12px] sm:text-[12px]">⚠️ Please send exact total amount before submitting.</p>
+            </div>
+
+            <div>
+              <label class="block text-[12px] sm:text-[12px] font-bold text-blue-950 mb-0.5">Upload Official GCash Screenshot Receipt (only this is needed) <span class="text-rose-700">*</span></label>
+              <input type="file" id="cust-receipt-file" accept="image/*" class="w-full text-[12px] sm:text-[12px] text-bacha-text file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[12px] file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer" required />
+            </div>
+          </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="pt-2.5 border-t border-bacha-gingham space-y-2 shrink-0">
+        <div id="coupon-total-line" class="cpn-total-line hidden"></div>
+        <div class="flex justify-between items-center text-base font-bold font-cute">
+          <span class="text-bacha-text">Total Amount:</span>
+          <span id="cart-total-price" class="text-xl sm:text-2xl text-bacha-matcha font-bold">₱0</span>
+        </div>
+
+        <button id="submit-order-btn" onclick="submitCustomerOrder()" class="w-full py-2.5 rounded-xl bg-bacha-berry hover:bg-bacha-berryDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm flex items-center justify-center gap-1.5">
+          <span>Upload Receipt &amp; Submit Order</span>
+          <i aria-hidden="true" data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN RECEIPT INSPECTION MODAL (FULL VIEW) -->
+  <div id="receipt-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)toggleReceiptModal(false)">
+    <div class="relative w-full max-w-3xl bg-white rounded-2xl p-4 border border-bacha-gingham text-center space-y-3">
+      <div class="flex justify-between items-center pb-2 border-b border-bacha-gingham">
+        <span class="font-cute font-bold text-base text-bacha-text">GCash Receipt Inspection</span>
+        <button onclick="toggleReceiptModal(false)" aria-label="Close" class="no-tap hit w-9 h-9 -m-1 rounded-full flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-100"><span aria-hidden="true">✕</span></button>
+      </div>
+      <div class="max-h-[75vh] overflow-auto rounded-xl border border-gray-100 p-1 bg-gray-50 flex items-start justify-center aesthetic-scroll">
+        <img id="modal-receipt-img" src="" alt="GCash Receipt" class="max-w-full h-auto object-contain rounded-lg" />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <p id="modal-receipt-ref" class="text-sm font-cute font-bold text-blue-900 text-left"></p>
+        <a id="modal-receipt-open" href="#" target="_blank" rel="noopener" class="text-[13px] font-bold text-blue-700 underline shrink-0">Open original ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACK ORDER MODAL -->
+  <div id="track-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-5 border-2 border-bacha-strawberry/35 soft-shadow space-y-3 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-2 border-b border-bacha-gingham">
+        <h3 class="font-cute font-bold text-lg text-bacha-berry">🧾 Track Order &amp; Invoice</h3>
+        <button onclick="toggleTrackModal(false)" aria-label="Close" class="no-tap hit w-9 h-9 -m-1 rounded-full flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-100"><span aria-hidden="true">✕</span></button>
+      </div>
+      <input type="text" id="track-id" placeholder="Order ID (e.g. BOX-1234)" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm font-bold uppercase focus:outline-none focus:border-bacha-strawberry" />
+      <input type="text" id="track-contact" autocomplete="tel" inputmode="tel" placeholder="Mobile number used when ordering" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry" />
+      <button onclick="trackOrder()" class="w-full py-2 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm">Find My Order</button>
+      <div id="track-result" class="text-sm"></div>
+    </div>
+  </div>
+
+  <!-- INVOICE MODAL -->
+  <div id="invoice-modal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-2xl p-5 border border-bacha-gingham max-h-[92vh] overflow-y-auto">
+      <div id="invoice-body"></div>
+      <div class="no-print flex gap-2 pt-3">
+        <button onclick="printInvoice()" class="flex-1 py-2 rounded-xl bg-bacha-matcha text-white font-cute font-bold text-sm">🖨️ Print / Save PDF</button>
+        <button onclick="toggleInvoiceModal(false)" class="px-4 py-2 rounded-xl border border-bacha-gingham font-cute font-bold text-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <aside aria-label="Social"><a id="ig-float" href="#" target="_blank" rel="noopener" class="hidden inline-flex fixed bottom-24 lg:bottom-4 left-3 lg:left-4 z-30 px-3 py-2 rounded-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-cute font-bold text-[13px] shadow-lg items-center gap-1.5">📷 <span>Message us<span class="hidden sm:inline"> on Instagram</span></span></a></aside>
+
+  <!-- Mobile sticky bag bar (customer) -->
+  <div id="mobile-bag-bar" role="region" aria-label="Your box and bag" class="hidden fixed bottom-0 inset-x-0 z-30 lg:hidden bg-white/95 backdrop-blur-sm border-t-2 border-bacha-strawberry/30 px-3 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] items-center gap-3 shadow-[0_-6px_20px_-8px_rgba(255,138,158,0.45)]">
+    <div id="mbar-thumbs" class="flex -space-x-2 shrink-0"></div>
+    <div class="flex-1 min-w-0">
+      <p id="mbar-title" class="font-cute font-bold text-base text-bacha-text leading-tight truncate"></p>
+      <p id="mbar-sub" class="text-[13px] font-bold text-bacha-matchaDark truncate"></p>
+    </div>
+    <button id="mbar-btn" onclick="mobileBarAction()" class="shrink-0 px-4 py-2.5 rounded-xl bg-bacha-berry hover:bg-bacha-berryDark text-white font-cute font-bold text-sm shadow-sm"></button>
+  </div>
+
+  <!-- Mobile sticky POS bar (admin) -->
+  <div id="pos-mobile-bar" role="region" aria-label="POS ticket summary" class="hidden fixed bottom-0 inset-x-0 z-30 md:!hidden bg-white/95 backdrop-blur-sm border-t-2 border-bacha-matcha/40 px-3 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] items-center gap-3 shadow-[0_-6px_20px_-8px_rgba(126,159,118,0.5)]">
+    <div class="flex-1 min-w-0">
+      <p id="pos-bar-info" class="font-cute font-bold text-base text-bacha-text leading-tight truncate"></p>
+      <p id="pos-bar-total" class="font-cute font-bold text-xl text-bacha-matcha leading-tight"></p>
+    </div>
+    <button onclick="posBarAction()" class="shrink-0 px-4 py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm shadow-sm">Review &amp; Charge</button>
+  </div>
+
+  <!-- ORDER SUBMITTED (keeps the order ID on screen until the customer closes it) -->
+  <div id="order-success-modal" class="fixed inset-0 z-[70] bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 border-2 border-bacha-strawberry/40 soft-shadow text-center space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="w-14 h-14 rounded-full bg-bacha-pinkLight border border-bacha-gingham mx-auto flex items-center justify-center text-3xl shadow-inner">🎉</div>
+      <div class="space-y-1">
+        <h3 class="font-cute font-bold text-2xl text-bacha-berry">Order Submitted!</h3>
+        <p id="order-success-sub" class="text-sm text-bacha-text/80 font-medium leading-relaxed"></p>
+      </div>
+      <div class="rounded-2xl bg-bacha-pinkLight/70 border-2 border-dashed border-bacha-strawberry/50 p-3 space-y-2">
+        <p class="text-[12px] font-bold text-bacha-text/75 uppercase tracking-wide">Your Order ID</p>
+        <p id="order-success-id" class="font-mono font-bold text-3xl text-bacha-matchaDark tracking-wider select-all"></p>
+        <button id="order-copy-btn" onclick="copyOrderId()" class="px-3 py-2 rounded-xl border border-bacha-matcha text-bacha-matchaDark hover:bg-bacha-matchaLight font-cute font-bold text-sm">📋 Copy Order ID</button>
+      </div>
+      <p class="text-[13px] text-bacha-text/75 leading-relaxed">Keep this ID. Once our baker confirms your order, enter it with your mobile number under <b>My Order</b> to see your invoice.</p>
+      <div class="flex gap-2">
+        <button onclick="trackJustPlaced()" class="flex-1 py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm shadow-sm">Track my order</button>
+        <button onclick="toggleOrderSuccess(false)" class="px-4 py-2.5 rounded-xl border border-bacha-gingham hover:bg-bacha-pinkLight font-cute font-bold text-sm">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <footer id="site-footer" class="max-w-7xl mx-auto w-full px-3 sm:px-6 pb-28 lg:pb-6 pt-2 text-center text-[13px] text-bacha-text/75 font-cute">
+    © Bacha Matcha &amp; Bakehouse · <button onclick="openAdminAccess()" class="underline hover:text-bacha-matcha px-2 py-1.5">Staff login</button>
+  </footer>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 border-2 border-bacha-strawberry/35 soft-shadow space-y-4 text-center">
+      <button onclick="toggleAdminLoginModal(false)" aria-label="Close" class="no-tap hit absolute top-3 right-3 text-bacha-text/75 hover:text-bacha-text p-2.5 rounded-full">
+        <i aria-hidden="true" data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      <div class="w-12 h-12 rounded-full bg-bacha-pinkLight border border-bacha-gingham mx-auto flex items-center justify-center text-2xl shadow-inner">🔐</div>
+      <div>
+        <h3 class="font-cute font-bold text-2xl text-bacha-berry">Admin Authentication</h3>
+        <p class="text-sm text-bacha-text/75 mt-0.5">Please enter the security passcode to proceed.</p>
+      </div>
+      <div id="admin-force-panel" class="hidden space-y-2 text-left">
+        <p class="text-[13px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2.5">First sign-in: please choose your own PIN (6 or more characters) before using the admin hub. The default PIN stops working after this.</p>
+        <div>
+          <label for="force-pin-new" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">New PIN</label>
+          <input type="password" id="force-pin-new" autocomplete="new-password" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry text-center tracking-widest font-mono" />
+        </div>
+        <div>
+          <label for="force-pin-confirm" class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Confirm new PIN</label>
+          <input type="password" id="force-pin-confirm" autocomplete="new-password" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry text-center tracking-widest font-mono" onkeydown="if(event.key === 'Enter') handleForcedPinChange()" />
+        </div>
+        <p id="force-pin-error" class="text-[12px] font-bold text-rose-700 hidden text-center" role="alert"></p>
+        <button onclick="handleForcedPinChange()" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm">Save PIN &amp; Enter</button>
+      </div>
+      <div id="admin-login-fields" class="space-y-2 text-left">
+        <div>
+          <label class="block text-[12px] font-bold text-bacha-text/75 mb-0.5">Staff Passcode / PIN</label>
+          <input type="password" id="admin-password-input" autocomplete="current-password" placeholder="••••••••" class="w-full px-3 py-2 rounded-xl border border-bacha-gingham text-sm focus:outline-none focus:border-bacha-strawberry text-center tracking-widest font-mono" onkeydown="if(event.key === 'Enter') handleAdminLogin()" />
+        </div>
+        <p id="admin-login-error" class="text-[12px] font-bold text-rose-700 hidden text-center" role="alert">Incorrect passcode. Try again.</p>
+      </div>
+      <div class="pt-1" id="admin-login-btnrow">
+        <button onclick="handleAdminLogin()" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm flex items-center justify-center gap-1.5">
+          <span>Enter Admin Hub</span>
+          <i aria-hidden="true" data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEMED ALERT MODAL -->
+  <!-- DELIVERY MAP (admin) -->
+  <div id="delivery-map-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)toggleDeliveryMap(false)">
+    <div class="dmap-card relative w-full overflow-y-auto bg-white rounded-2xl p-3 sm:p-4 border border-bacha-gingham space-y-3">
+      <div class="flex justify-between items-center gap-3 pb-2 border-b border-bacha-gingham">
+        <div class="min-w-0">
+          <span class="font-cute font-bold text-lg text-bacha-berry">🗺️ Delivery map</span>
+          <p id="dmap-summary" class="text-[13px] text-bacha-text/80" role="status"></p>
+        </div>
+        <button type="button" onclick="toggleDeliveryMap(false)" aria-label="Close map" class="no-tap hit w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-gray-600 hover:text-black hover:bg-gray-100"><span aria-hidden="true">✕</span></button>
+      </div>
+      <div id="dmap-host" class="is-tall"></div>
+      <div class="bmap-legend"><span>🍪 Your shop</span><span>📍 Customer</span><span>Dashed circle = delivery area</span><span><i class="rt-key" aria-hidden="true"></i>Delivery route</span>
+        <label class="flex items-center gap-1.5 font-bold cursor-pointer"><input type="checkbox" id="dmap-finished" onchange="renderDeliveryMap(true)" class="w-4 h-4 accent-[#4F6E48]" /> Include finished orders</label></div>
+      <div id="dmap-detail" aria-live="polite"></div>
+      <div id="dmap-route" class="rt-panel"></div>
+      <div id="dmap-missing"></div>
+    </div>
+  </div>
+
+  <div id="bacha-alert-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 border-2 border-bacha-strawberry/40 soft-shadow text-center space-y-4 dialog-pop">
+      <div id="bacha-alert-icon-container" class="w-14 h-14 rounded-full bg-bacha-pinkLight border border-bacha-gingham mx-auto flex items-center justify-center text-3xl shadow-inner">
+        <span id="bacha-alert-emoji">🌸</span>
+      </div>
+
+      <div class="space-y-1">
+        <h3 id="bacha-alert-title" class="font-cute font-bold text-2xl text-bacha-berry">Bacha Bakehouse</h3>
+        <p id="bacha-alert-message" class="text-sm text-bacha-text/80 font-medium leading-relaxed px-2 whitespace-pre-line"></p>
+      </div>
+
+      <div class="pt-1">
+        <button id="bacha-alert-btn" class="w-full py-2.5 rounded-xl bg-bacha-matcha hover:bg-bacha-matchaDark text-white font-cute font-bold text-sm tracking-wide transition shadow-sm flex items-center justify-center gap-1">
+          <span>Okay, Got It! ♡</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEMED CONFIRMATION MODAL -->
+  <div id="bacha-confirm-modal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 border-2 border-bacha-strawberry/40 soft-shadow text-center space-y-4 dialog-pop">
+      <div class="w-14 h-14 rounded-full bg-bacha-pinkLight border border-bacha-gingham mx-auto flex items-center justify-center text-3xl shadow-inner">
+        <span id="bacha-confirm-emoji">🍵</span>
+      </div>
+
+      <div class="space-y-1">
+        <h3 id="bacha-confirm-title" class="font-cute font-bold text-2xl text-bacha-berry">Please Confirm</h3>
+        <p id="bacha-confirm-message" class="text-sm text-bacha-text/80 font-medium leading-relaxed px-2 whitespace-pre-line"></p>
+      </div>
+
+      <div class="flex gap-2 pt-1">
+        <button id="bacha-confirm-cancel" class="flex-1 py-2.5 rounded-xl border border-bacha-gingham hover:bg-bacha-pinkLight text-bacha-text font-cute font-bold text-sm transition">
+          Cancel
+        </button>
+        <button id="bacha-confirm-ok" class="flex-1 py-2.5 rounded-xl bg-bacha-berry hover:bg-bacha-berryDark text-white font-cute font-bold text-sm transition shadow-sm">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP CODE (order matters) -->
+  <script src="js/01-core.js"></script>
+  <script src="js/02-storefront.js"></script>
+  <script src="js/03-products.js"></script>
+  <script src="js/04-admin-orders.js"></script>
+  <script src="js/05-menu-pos.js"></script>
+  <script src="js/06-settings-invoice.js"></script>
+  <script src="js/07-ui-a11y.js"></script>
+  <script src="js/08-lifecycle.js"></script>
+  <script src="js/09-admin-writes.js"></script>
+  <script src="js/10-alerts.js"></script>
+  <script src="js/11-cash-records.js"></script>
+  <script src="js/12-messages.js"></script>
+  <script src="js/14-today.js"></script>
+  <script src="js/15-site-options.js"></script>
+  <script src="js/16-map.js"></script>
+  <script src="js/17-feedback-admin.js"></script><!-- Part 9: admin "Feedback" tab + logo goes Home (new file) -->
+  <script src="js/18-coupon.js"></script><!-- Part 9B: use feedback coupons at checkout (new file) -->
+  <script src="js/13-init.js"></script>
+</body>
+</html>

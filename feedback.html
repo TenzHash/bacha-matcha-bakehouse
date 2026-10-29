@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feedback · Bacha Matcha &amp; Bakehouse</title>
+  <meta name="theme-color" content="#FFF7F9" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body class="home">
+  <a class="home-skip" href="#fb-main">Skip to feedback</a>
+
+  <header class="fb-top">
+    <div class="fb-top-in">
+      <a class="fb-back" href="index.html" aria-label="Back to home"><span aria-hidden="true">←</span> Home</a>
+      <a class="fb-brand" href="index.html" aria-label="Bacha home"><img src="images/bacha_logo.jpg" alt="" width="34" height="34" /><span>BACHA</span></a>
+      <a class="fb-back fb-order" href="shop.html">Order <span aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <main id="fb-main" class="fb-main" tabindex="-1">
+    <section class="fb-hero" aria-labelledby="fb-h1">
+      <h1 id="fb-h1">Feedback</h1>
+      <p id="fb-caption" class="fb-caption">Tell us how we did - we read every single one.</p>
+      <p id="fb-perk" class="fb-perk" hidden></p>
+    </section>
+
+    <!-- YOUR FEEDBACK (only appears after you have sent some from this device) -->
+    <section id="fb-mine-wrap" class="fb-card" aria-labelledby="fb-mine-h" hidden>
+      <h2 id="fb-mine-h">Your feedback</h2>
+      <ul class="fb-mine" id="fb-mine" aria-live="polite"></ul>
+    </section>
+
+    <!-- THE FORM -->
+    <section id="fb-form-card" class="fb-card" aria-labelledby="fb-form-h">
+      <div id="fb-closed" hidden class="fb-empty">
+        <div style="font-size:2rem" aria-hidden="true">🌙</div>
+        <p style="margin:6px 0 0"><b>We're not collecting feedback right now.</b><br>Please check back soon, and thank you for caring!</p>
+      </div>
+
+      <form id="fb-form" novalidate autocomplete="off">
+        <h2 id="fb-form-h">Share your thoughts</h2>
+
+        <fieldset class="fb-field" aria-describedby="fb-stars-err">
+          <legend>Your rating <span aria-hidden="true">*</span></legend>
+          <div class="fb-stars" id="fb-stars" role="radiogroup" aria-label="Rating from 1 to 5 stars"></div>
+        </fieldset>
+
+        <div class="fb-field">
+          <label for="fb-msg">Your feedback <span aria-hidden="true">*</span></label>
+          <textarea id="fb-msg" class="fb-text" maxlength="600" rows="5" placeholder="What did you order? What did you love, or what could be better?" aria-required="true"></textarea>
+          <div class="fb-count"><span id="fb-count">0</span>/600</div>
+        </div>
+
+        <div class="fb-field" id="fb-photo-field">
+          <span class="fb-label" id="fb-photo-label">Photos <small>(optional · up to 2)</small></span>
+          <div class="fb-photos" id="fb-photos" role="group" aria-labelledby="fb-photo-label"></div>
+          <input type="file" id="fb-file" accept="image/jpeg,image/png,image/webp" multiple class="home-sr" tabindex="-1" aria-hidden="true" />
+        </div>
+
+        <div class="fb-field">
+          <label for="fb-name">Your name <small>(optional · only your first name is shown)</small></label>
+          <input id="fb-name" class="fb-input" maxlength="40" autocomplete="given-name" />
+        </div>
+
+        <div class="fb-field" id="fb-contact-field">
+          <label for="fb-contact">Mobile number or Messenger name <small>(optional · only we can see it)</small></label>
+          <input id="fb-contact" class="fb-input" maxlength="60" autocomplete="off" />
+        </div>
+
+        <div class="fb-hp" aria-hidden="true"><label>Leave this empty <input id="fb-hp" tabindex="-1" autocomplete="off"></label></div>
+
+        <div id="fb-error" class="fb-error" role="alert" hidden></div>
+        <button type="submit" id="fb-send" class="fb-btn fb-btn--block">Send feedback</button>
+        <p class="fb-fine">Approved feedback may appear below with your first name and photos.</p>
+      </form>
+
+      <!-- shown after sending -->
+      <div id="fb-thanks" class="fb-thanks" hidden tabindex="-1" aria-live="polite"></div>
+    </section>
+
+    <!-- WALL -->
+    <section aria-labelledby="fb-wall-h">
+      <div class="fb-wall-head">
+        <h2 id="fb-wall-h">What others said</h2>
+        <button type="button" class="fb-btn fb-btn--berry" id="fb-add-yours" style="min-height:46px;font-size:1rem">＋ Add yours</button>
+      </div>
+      <div id="fb-wall" class="fb-wall" style="margin-top:14px" aria-live="polite"><div class="fb-skeleton"></div><div class="fb-skeleton"></div></div>
+    </section>
+  </main>
+
+  <button type="button" id="fb-float" class="fb-btn fb-btn--berry fb-float" hidden>＋ Add yours</button>
+
+  <div id="fb-lightbox" class="fb-lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo">
+    <button type="button" class="home-x" id="fb-lightbox-x" aria-label="Close photo">×</button>
+    <img id="fb-lightbox-img" alt="Feedback photo, full size" />
+  </div>
+
+  <script src="vendor/supabase.js"></script>
+  <script src="js/home-common.js"></script>
+  <script src="js/feedback-page.js"></script>
+</body>
+</html>

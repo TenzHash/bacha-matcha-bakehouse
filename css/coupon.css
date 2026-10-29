@@ -1,0 +1,17 @@
+/* Part 9B: coupon box in the bag. Plain CSS on purpose (css/tailwind.css is pre-built and would not contain new classes). */
+.cpn-box { padding: 10px; border-radius: 12px; background: #FFF0F3; border: 1px solid #F9D8DF; }
+.cpn-title { font-family: 'Fredoka', cursive, sans-serif; font-weight: 700; font-size: 13px; color: #C2365A; margin: 0 0 6px; }
+.cpn-row { display: flex; gap: 6px; align-items: stretch; }
+.cpn-row input { flex: 1 1 auto; min-width: 0; text-transform: uppercase; letter-spacing: .04em; }
+.cpn-row input[readonly] { background: #DDE8D9; border-color: #4F6E48; color: #3F5A38; font-weight: 700; }
+.cpn-btn { flex: 0 0 auto; min-height: 40px; padding: 0 14px; border-radius: 12px; border: 0; cursor: pointer; font-family: 'Fredoka', cursive, sans-serif;
+  font-weight: 700; font-size: 13px; color: #fff; background: #C2365A; }
+.cpn-btn:hover { background: #A12D4C; }
+.cpn-btn:disabled { opacity: .6; cursor: default; }
+.cpn-msg { margin: 6px 0 0; font-size: 13px; font-weight: 700; min-height: 0; }
+.cpn-msg:empty { display: none; }
+.cpn-msg.cpn-ok { color: #3F5A38; }
+.cpn-msg.cpn-err { color: #BE123C; }
+.cpn-total-line { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 13px; font-weight: 700; color: #4A3E3D; }
+.cpn-total-line span:last-child { color: #3F5A38; }
+.cpn-total-line.hidden, .cpn-box.hidden { display: none; }   /* keep Tailwind's "hidden" winning over the display rules above */
